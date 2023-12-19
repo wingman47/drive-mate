@@ -21,6 +21,7 @@ app.use(morgan("dev"));
 
 //ROUTES
 app.use("/api/v1/auth", require("./routes/userRoutes"));
+app.use("/api/driver/queue", require("./routes/userRoutes"));
 
 //PORT
 const PORT = process.env.PORT || 8080;
