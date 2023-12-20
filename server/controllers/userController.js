@@ -50,11 +50,11 @@ const registerController = async (req, res) => {
       email,
       password: hashedPassword,
     }).save();
-
+    console.log("created user", user);
     return res.status(201).send({
       success: true,
       message: "Registeration Successful please login",
-      user: user
+      user: user,
     });
   } catch (error) {
     console.log(error);

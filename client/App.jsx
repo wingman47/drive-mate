@@ -1,18 +1,32 @@
-import React from 'react';
 import {store} from './store';
 import {Provider} from 'react-redux';
-import HomeScreen from './screens/map/HomeScreen';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import HomeScreen from './screens/map/HomeScreen';
 import MapScreen from './screens/map/MapScreen';
-import {KeyboardAvoidingView, Platform} from 'react-native';
 import Login from './screens/auth/Login';
 import Register from './screens/auth/Register';
+import {KeyboardAvoidingView, Platform} from 'react-native';
+import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Profile from './screens/Temp/Profile';
+import Settings from './screens/Temp/Settings';
+import ScheduledScreen from './screens/scheduled/ScheduledScreen';
 
-const App = () => {
-  const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
+function Home() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Drive" component={HomeScreen} />
+      <Tab.Screen name="Scheduled" component={ScheduledScreen} />
+    </Tab.Navigator>
+  );
+}
+
+function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
@@ -22,6 +36,11 @@ const App = () => {
             style={{flex: 1}}
             keyboardVerticalOffset={Platform.OS === 'ios' ? -64 : 0}>
             <Stack.Navigator initialRouteName="Login">
+              <Stack.Screen
+                name="Home"
+                component={Home}
+                options={{headerShown: false}}
+              />
               <Stack.Screen
                 name="Register"
                 component={Register}
@@ -33,8 +52,13 @@ const App = () => {
                 options={{headerShown: false}}
               />
               <Stack.Screen
-                name="Home"
-                component={HomeScreen}
+                name="Profile"
+                component={Profile}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="Settings"
+                component={Settings}
                 options={{headerShown: false}}
               />
               <Stack.Screen
@@ -48,6 +72,6 @@ const App = () => {
       </NavigationContainer>
     </Provider>
   );
-};
+}
 
 export default App;

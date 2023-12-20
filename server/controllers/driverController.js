@@ -1,4 +1,3 @@
-const express = require("express");
 const Driver = require("../models/driverModel");
 
 // Example route to create a new driver
