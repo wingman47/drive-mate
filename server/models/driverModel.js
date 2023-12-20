@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const User = require("./userModel");
+
 const driverSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -19,7 +21,6 @@ const driverSchema = new mongoose.Schema({
       type: String,
       enum: ["Point"],
       required: true,
-      default: "Point",
     },
     coordinates: {
       type: [Number],
@@ -46,6 +47,10 @@ const driverSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 // Create a geospatial index for the 'origin' field
@@ -54,7 +59,3 @@ driverSchema.index({ origin: "2dsphere" });
 const Driver = mongoose.model("Driver", driverSchema);
 
 module.exports = Driver;
-
-/*
-
-*/

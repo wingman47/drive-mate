@@ -26,7 +26,7 @@ const Register = ({navigation}) => {
       }
       setLoading(false);
       const user = await axios.post(
-        'http://192.168.1.11:8080/api/v1/auth/register',
+        'http://192.168.1.15:8080/api/v1/auth/register',
         {name, email, password},
       );
       // console.log(user.data.user);

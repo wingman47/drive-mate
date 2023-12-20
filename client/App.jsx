@@ -14,6 +14,8 @@ import Profile from './screens/Temp/Profile';
 import Settings from './screens/Temp/Settings';
 import ScheduledScreen from './screens/scheduled/ScheduledScreen';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import DriverForm from './screens/Form/DriverForm';
+import RiderForm from './screens/Form/RiderForm';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -37,11 +39,9 @@ function Home() {
             <MaterialCommunityIcons name={iconName} size={size} color={color} />
           );
         },
-      })}
-      tabBarOptions={{
-        activeTintColor: 'tomato',
-        inactiveTintColor: 'gray',
-      }}>
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+      })}>
       <Tab.Screen name="Drive" component={HomeScreen} />
       <Tab.Screen name="Scheduled" component={ScheduledScreen} />
       <Tab.Screen name="Profile" component={Profile} />
@@ -87,6 +87,16 @@ function App() {
               <Stack.Screen
                 name="MapScreen"
                 component={MapScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="DriverForm"
+                component={DriverForm}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="RiderForm"
+                component={RiderForm}
                 options={{headerShown: false}}
               />
             </Stack.Navigator>
