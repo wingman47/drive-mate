@@ -13,15 +13,38 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Profile from './screens/Temp/Profile';
 import Settings from './screens/Temp/Settings';
 import ScheduledScreen from './screens/scheduled/ScheduledScreen';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function Home() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color, size}) => {
+          let iconName;
+
+          if (route.name === 'Drive') {
+            iconName = focused ? 'car' : 'car-outline';
+          } else if (route.name === 'Scheduled') {
+            iconName = focused ? 'calendar' : 'calendar-outline';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'account' : 'account-outline';
+          }
+
+          return (
+            <MaterialCommunityIcons name={iconName} size={size} color={color} />
+          );
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: 'tomato',
+        inactiveTintColor: 'gray',
+      }}>
       <Tab.Screen name="Drive" component={HomeScreen} />
       <Tab.Screen name="Scheduled" component={ScheduledScreen} />
+      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
 }
