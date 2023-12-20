@@ -10,12 +10,11 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Profile from './screens/Temp/Profile';
-import Settings from './screens/Temp/Settings';
 import ScheduledScreen from './screens/scheduled/ScheduledScreen';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DriverForm from './screens/Form/DriverForm';
 import RiderForm from './screens/Form/RiderForm';
+import ProfileScreen from './screens/profile/ProfileScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,7 +43,7 @@ function Home() {
       })}>
       <Tab.Screen name="Drive" component={HomeScreen} />
       <Tab.Screen name="Scheduled" component={ScheduledScreen} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
@@ -76,12 +75,7 @@ function App() {
               />
               <Stack.Screen
                 name="Profile"
-                component={Profile}
-                options={{headerShown: false}}
-              />
-              <Stack.Screen
-                name="Settings"
-                component={Settings}
+                component={ProfileScreen}
                 options={{headerShown: false}}
               />
               <Stack.Screen
