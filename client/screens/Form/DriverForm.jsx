@@ -13,6 +13,9 @@ import Time from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import tw from 'twrnc';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useDispatch} from 'react-redux';
+import {selectUser} from '../../slice/authSlice';
+import {selectDestination, selectOrigin} from '../../slice/navSlice';
 
 const DriverForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -22,6 +25,31 @@ const DriverForm = () => {
   const [formattedDateAndTime, setFormattedDateAndTime] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [numberOfSeats, setNumberOfSeats] = useState('');
+  const dispatch = useDispatch();
+
+  const handleSubmit = async () => {
+    // ! TODO: redux
+    try {
+      if (!numberOfSeats || !selectedCategory || !formattedDateAndTime) {
+        Alert.alert('Please fill the fields');
+        return;
+      }
+      const {savedDriver} = await axios.post(
+        'http://192.168.1.15:8080/api/driver/queue/createdriver',
+        {
+          userId: selectUser._id,
+          origin: selectOrigin,
+          destination: selectDestination,
+          category,
+          preferredDateTime: formattedDateAndTime,
+          numberOfSeats,
+        },
+      );
+      dispatch();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -65,15 +93,8 @@ const DriverForm = () => {
     console.log(formattedDateAndTime);
   };
 
-  const handleSubmit = async () => {
-    try {
-      
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   const categories = [
+    {label: 'None', value: 'none'},
     {label: 'Work', value: 'work'},
     {label: 'Shopping', value: 'shopping'},
     {label: 'Education', value: 'education'},

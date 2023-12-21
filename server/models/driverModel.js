@@ -3,19 +3,6 @@ const mongoose = require("mongoose");
 const User = require("./userModel");
 
 const driverSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  phoneNumber: {
-    type: String,
-    required: true,
-  },
   origin: {
     type: {
       type: String,

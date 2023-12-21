@@ -1,4 +1,3 @@
-const express = require("express");
 const Driver = require("../models/driverModel");
 const userModel = require("../models/userModel");
 
