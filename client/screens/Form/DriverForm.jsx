@@ -17,7 +17,6 @@ import {useDispatch} from 'react-redux';
 import {selectUser} from '../../slice/authSlice';
 import {selectDestination, selectOrigin} from '../../slice/navSlice';
 
-
 const DriverForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
@@ -46,7 +45,7 @@ const DriverForm = () => {
           numberOfSeats,
         },
       );
-      dispatch();
+      // dispatch();
     } catch (error) {
       console.log(error);
     }
@@ -81,14 +80,16 @@ const DriverForm = () => {
     setTime(t[0]);
   };
 
-  const handleCategoryChange = (category) => {
+  const handleCategoryChange = category => {
     setSelectedCategory(category);
   };
 
   const handleTimeAndDateConfirm = selectedTime => {
     hideTimePicker();
     const formattedTime = moment.utc(selectedTime).format('HH:mm:ss');
-    const combinedDateTime = moment.utc(`${date}T${formattedTime}`).toISOString();
+    const combinedDateTime = moment
+      .utc(`${date}T${formattedTime}`)
+      .toISOString();
     const formattedDateAndTime = combinedDateTime.slice(0, -5) + 'Z';
     setFormattedDateAndTime(formattedDateAndTime);
   };
@@ -166,6 +167,7 @@ const DriverForm = () => {
           onPress={() => {
             console.log('Form submitted:', {date, time, selectedCategory});
             handleTimeAndDateConfirm();
+            handleSubmit();
           }}>
           <Text style={[styles.buttonText, tw`font-bold text-xl`]}>Submit</Text>
         </TouchableOpacity>

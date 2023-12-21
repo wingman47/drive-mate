@@ -23,6 +23,28 @@ const RiderForm = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [numberOfSeats, setNumberOfSeats] = useState('');
 
+  const handleSubmit = async () => {
+    try {
+      if (!numberOfSeats || !selectedCategory || !formattedDateAndTime) {
+        Alert.alert('Please fill the fields');
+        return;
+      }
+      const {response} = await axios.post(
+        'http://192.168.1.15:8080/api/driver/queue/createdriver',
+        {
+          destination: selectDestination,
+          category,
+          preferredDateTime: formattedDateAndTime,
+        },
+      );
+      dispatch(setSameDestination(response.matchesDestination));
+      dispatch(setSameCategory(response.matchesCategory));
+      // ! TODO: radius
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -59,10 +81,12 @@ const RiderForm = () => {
 
   const handleTimeAndDateConfirm = selectedTime => {
     hideTimePicker();
-    const formattedTime = moment(selectedTime).format('HH:mm');
-    const combinedDateTime = moment(`${date}T${formattedTime}`).toISOString();
-    setFormattedDateAndTime(combinedDateTime);
-    console.log(formattedDateAndTime);
+    const formattedTime = moment.utc(selectedTime).format('HH:mm:ss');
+    const combinedDateTime = moment
+      .utc(`${date}T${formattedTime}`)
+      .toISOString();
+    const formattedDateAndTime = combinedDateTime.slice(0, -5) + 'Z';
+    setFormattedDateAndTime(formattedDateAndTime);
   };
 
   const categories = [
@@ -116,7 +140,7 @@ const RiderForm = () => {
           onConfirm={handleTimeConfirm}
           onCancel={hideTimePicker}
         />
-        <Text style={styles.label}>Category:</Text>
+        <Text style={styles.label}>Category</Text>
         <RNPickerSelect
           items={categories}
           onValueChange={handleCategoryChange}
@@ -129,6 +153,7 @@ const RiderForm = () => {
           onPress={() => {
             console.log('Form submitted:', {date, time, selectedCategory});
             handleTimeAndDateConfirm();
+            handleSubmit();
           }}>
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
