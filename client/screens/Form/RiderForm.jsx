@@ -25,7 +25,7 @@ const RiderForm = () => {
 
   const handleSubmit = async () => {
     try {
-      if (!numberOfSeats || !selectedCategory || !formattedDateAndTime) {
+      if (!selectedCategory || !formattedDateAndTime) {
         Alert.alert('Please fill the fields');
         return;
       }
