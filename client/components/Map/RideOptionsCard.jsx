@@ -14,7 +14,6 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {selectTravelTimeInformation} from '../../slice/navSlice';
 import SubmitButton from '../Form/SubmitButton';
-import Navigation from '../../Navigation';
 
 const data = [
   {
