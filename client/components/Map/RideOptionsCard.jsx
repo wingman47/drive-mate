@@ -47,7 +47,7 @@ const RideOptionsCard = () => {
 
   return (
     <SafeAreaView style={tw`bg-white flex-grow`}>
-      <View>
+      <View style={tw`m-6 p-6`}>
         <SubmitButton
           btnTitle={'Ride'}
           handleSubmit={() => navigation.navigate('RiderForm')}

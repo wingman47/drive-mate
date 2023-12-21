@@ -5,7 +5,7 @@ import tw from 'twrnc';
 
 const Schedule = () => {
   return (
-    <View style={tw`bg-white mx-4 my-4 rounded-md`}>
+    <View style={tw`bg-white mx-4 my-4 rounded-md shadow-xl`}>
       <View style={tw`px-5 py-4`}>
         <Text style={tw`text-sm font-base text-black`}>Fri, Nov 29</Text>
         <View style={tw`flex-row items-center`}>
