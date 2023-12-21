@@ -1,11 +1,18 @@
 import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  ScrollView,
+} from 'react-native';
 import tw from 'twrnc';
 import NavOptions from '../../components/Map/NavOptions';
 import GOOGLE_MAPS_APIkEY from '../../config/index';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { useDispatch } from 'react-redux';
-import { setDestination, setOrigin } from '../../slice/navSlice';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import {useDispatch} from 'react-redux';
+import {setDestination, setOrigin} from '../../slice/navSlice';
 import NavFavourites from '../../components/Map/NavFavourites';
 
 const HomeScreen = () => {
@@ -30,15 +37,17 @@ const HomeScreen = () => {
             placeholder="Where From?"
             nearbyPlacesAPI="GooglePlacesSearch"
             minLength={2}
-            onPress={(data,details = null) =>{
-              dispatch(setOrigin({
-                location: details.geometry.location,
-                description: data.description
-              }))
-              dispatch(setDestination(null))
+            onPress={(data, details = null) => {
+              dispatch(
+                setOrigin({
+                  location: details.geometry.location,
+                  description: data.description,
+                }),
+              );
+              dispatch(setDestination(null));
             }}
             fetchDetails={true}
-            returnKeyType={"search"}
+            returnKeyType={'search'}
             enablePoweredByContainer={false}
             debounce={400}
             style={tw`my-8 z-50`}
@@ -46,10 +55,10 @@ const HomeScreen = () => {
               key: GOOGLE_MAPS_APIkEY,
               language: 'en',
             }}
-            onFail={(error) => console.error(error)}
+            onFail={error => console.error(error)}
           />
-          <NavOptions/>
-          <NavFavourites/>
+          <NavOptions />
+          <NavFavourites />
         </View>
       </ScrollView>
     </SafeAreaView>

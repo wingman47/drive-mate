@@ -65,6 +65,14 @@ const DriverForm = () => {
     setFormattedDateAndTime(formattedDateAndTime);
   };
 
+  const handleSubmit = async () => {
+    try {
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const categories = [
     {label: 'Work', value: 'work'},
     {label: 'Shopping', value: 'shopping'},
@@ -124,7 +132,7 @@ const DriverForm = () => {
           onConfirm={handleTimeConfirm}
           onCancel={hideTimePicker}
         />
-        <Text style={styles.label}>Category:</Text>
+        <Text style={styles.label}>Category</Text>
         <RNPickerSelect
           items={categories}
           onValueChange={handleCategoryChange}
@@ -135,10 +143,10 @@ const DriverForm = () => {
         <TouchableOpacity
           style={[styles.button, tw`bg-red-600 font-bold py-4`]}
           onPress={() => {
-            console.log('Form submitted:', {date,  selectedCategory, formattedDateAndTime , time});
-            handleTimeAndDateConfirm()
+            console.log('Form submitted:', {date, time, selectedCategory});
+            handleTimeAndDateConfirm();
           }}>
-          <Text style={styles.buttonText}>Submit</Text>
+          <Text style={[styles.buttonText, tw`font-bold text-xl`]}>Submit</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAwareScrollView>
