@@ -14,6 +14,7 @@ import moment from 'moment';
 import tw from 'twrnc';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
+
 const DriverForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
@@ -50,19 +51,18 @@ const DriverForm = () => {
     const formattedTime = moment(selectedTime).format('HH:mm:ss');
     const t = formattedTime.split('.');
     setTime(t[0]);
-    console.log(time);
   };
 
-  const handleCategoryChange = category => {
+  const handleCategoryChange = (category) => {
     setSelectedCategory(category);
   };
 
   const handleTimeAndDateConfirm = selectedTime => {
     hideTimePicker();
-    const formattedTime = moment(selectedTime).format('HH:mm');
-    const combinedDateTime = moment(`${date}T${formattedTime}`).toISOString();
-    setFormattedDateAndTime(combinedDateTime);
-    console.log(formattedDateAndTime);
+    const formattedTime = moment.utc(selectedTime).format('HH:mm:ss');
+    const combinedDateTime = moment.utc(`${date}T${formattedTime}`).toISOString();
+    const formattedDateAndTime = combinedDateTime.slice(0, -5) + 'Z';
+    setFormattedDateAndTime(formattedDateAndTime);
   };
 
   const categories = [
@@ -135,8 +135,8 @@ const DriverForm = () => {
         <TouchableOpacity
           style={[styles.button, tw`bg-red-600 font-bold py-4`]}
           onPress={() => {
-            console.log('Form submitted:', {date, time, selectedCategory});
-            handleTimeAndDateConfirm();
+            console.log('Form submitted:', {date,  selectedCategory, formattedDateAndTime , time});
+            handleTimeAndDateConfirm()
           }}>
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
