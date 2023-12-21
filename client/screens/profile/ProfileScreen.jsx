@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import {View, Text, StyleSheet, Image} from 'react-native';
 
 const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={{ uri: 'https://placekitten.com/200/200' }}
+          source={{uri: 'https://placekitten.com/200/200'}}
           style={styles.profileImage}
         />
         <Text style={styles.username}>User name</Text>
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+  },
   header: {
     alignItems: 'center',
     padding: 30,
@@ -60,8 +61,8 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 18,
     marginBottom: 15,
-    color: '#666'
-  }
-})
+    color: '#666',
+  },
+});
 
 export default ProfileScreen;
