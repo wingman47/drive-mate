@@ -35,11 +35,7 @@ const DriverForm = () => {
 
   const handleSubmit = async () => {
     try {
-      console.log(formattedDateAndTime);
-      console.log(user._id);
-      console.log(numberOfSeats);
-      console.log(destination);
-      console.log(origin);
+      console.log('formattedDateAndTime ', formattedDateAndTime);
       if (!numberOfSeats || !selectedCategory || !formattedDateAndTime) {
         Alert.alert('Please fill all the fields');
         return;
@@ -47,12 +43,20 @@ const DriverForm = () => {
       const {savedDriver} = await axios.post(
         `${ipconfig}/api/driver/queue/createdriver`,
         {
-          userId: user._id,
-          origin,
-          destination,
+          user: user._id,
+          origin: {
+            type: 'Point',
+            coordinates: [origin.location.lat, origin.location.lng],
+          },
+          destination: {
+            type: 'Point',
+            coordinates: [destination.location.lat, destination.location.lng],
+          },
           category: selectedCategory,
           preferredDateTime: formattedDateAndTime,
           numberOfSeats,
+          originAddress: origin.description,
+          destinationAddress: destination.description,
         },
       );
       // dispatch();
@@ -94,7 +98,7 @@ const DriverForm = () => {
     setSelectedCategory(category);
   };
 
-  const handleTimeAndDateConfirm = selectedTime => {
+  const handleTimeAndDateConfirm = async selectedTime => {
     return new Promise(resolve => {
       hideTimePicker();
       const formattedTime = moment.utc(selectedTime).format('HH:mm:ss');
@@ -177,12 +181,8 @@ const DriverForm = () => {
 
         <TouchableOpacity
           style={[styles.button, tw`bg-red-600 font-bold py-4`]}
-          onPress={() => {
-            handleTimeAndDateConfirm();
-            console.log('Form submitted:', {
-              formattedDateAndTime,
-              selectedCategory,
-            });
+          onPress={async () => {
+            await handleTimeAndDateConfirm();
             handleSubmit();
           }}>
           <Text style={[styles.buttonText, tw`font-bold text-xl`]}>Submit</Text>

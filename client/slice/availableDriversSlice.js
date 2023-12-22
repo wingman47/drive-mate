@@ -26,7 +26,7 @@ export const {setSameDestination, setSameCategory, setRadius} =
   availableDriversSlice.actions;
 
 // Selectors
-export const selectDestination = state =>
+export const selectSameDestination = state =>
   state.availableDriversSlice.sameDestination;
 export const selectCategory = state => state.availableDriversSlice.sameCategory;
 export const selectRadius = state => state.availableDriversSlice.radius;

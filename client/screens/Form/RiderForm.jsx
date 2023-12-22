@@ -16,7 +16,7 @@ import tw from 'twrnc';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import { selectDestination,selectCategory,selectRadius } from '../../slice/availableDriversSlice';
+import { selectSameDestination,selectCategory,selectRadius } from '../../slice/availableDriversSlice';
 import {selectDestination} from '../../slice/navSlice';
 import axios from 'axios';
 import {
