@@ -53,7 +53,7 @@ const RiderForm = () => {
       });
       const {data} = response;
       console.log('response recieved ', response);
-      if (response.status == 'success') {
+      if (response.status === 'success') {
         dispatch(setSameDestination(data.matchesDestination));
         dispatch(setSameCategory(data.matchesCategory));
         console.log('same destination ', sameDestination);
@@ -85,6 +85,7 @@ const RiderForm = () => {
     hideDatePicker();
     const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
     setDate(formattedDate);
+    console.log(date);
   };
 
   const showTimePicker = () => {
@@ -107,18 +108,21 @@ const RiderForm = () => {
     setSelectedCategory(category);
   };
 
-  const handleTimeAndDateConfirm = async selectedTime => {
-    return new Promise(resolve => {
+  const handleTimeAndDateConfirm = async (time,date) => {
+    return new Promise((resolve) => {
       hideTimePicker();
-      const formattedTime = moment.utc(selectedTime).format('HH:mm:ss');
-      const combinedDateTime = moment
-        .utc(`${date}T${formattedTime}`)
-        .toISOString();
-      const formattedDateAndTime = combinedDateTime.slice(0, -7) + "00" + 'Z';
+      const formattedDateAndTime = `${date}T${time}Z`
+      console.log(formattedDateAndTime);
+
+      // const formattedTime = moment(selectedTime).format('HH:mm:ss');
+      // const combinedDateTime = moment(`${date}T${formattedTime}`).toISOString();
+      // const formattedDateAndTime = combinedDateTime.slice(0, -7) + '00' + 'Z';
+  
       setFormattedDateAndTime(formattedDateAndTime);
       resolve(formattedDateAndTime);
     });
   };
+  
 
   const categories = [
     {label: 'Work', value: 'work'},
@@ -182,7 +186,7 @@ const RiderForm = () => {
         <TouchableOpacity
           style={[styles.button, tw`bg-green-600 font-bold py-4`]}
           onPress={async () => {
-            await handleTimeAndDateConfirm();
+            await handleTimeAndDateConfirm(time,date);
             handleSubmit();
           }}>
           <Text style={styles.buttonText}>Submit</Text>

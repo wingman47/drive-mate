@@ -6,36 +6,52 @@ const joinDriver = async (req, res) => {
   try {
     const { destination, category, preferredDateTime } = req.body;
     // Find drivers matching destination, date, and time
+    console.log("data recieved to find drivers: ", req.body);
     const destinationMatches = await Driver.find({
       destination,
       preferredDateTime,
-    }).populate('user'); // Assuming 'user' is the reference to the user model in the Driver model
+    }).populate("user"); // Assuming 'user' is the reference to the user model in the Driver model
 
     // Find drivers matching category, date, and time
     const categoryMatches = await Driver.find({
       category,
       preferredDateTime,
-    }).populate('user'); // Assuming 'user' is the reference to the user model in the Driver model
+    }).populate("user"); // Assuming 'user' is the reference to the user model in the Driver model
 
     // Prepare response with labels and spread user information
+    if (destinationMatches.length > 0 || categoryMatches.length > 0) {
+      const response = {
+        status: "success",
+        message: "Matches found!",
+        data: {
+          matchesDestination: destinationMatches.map((driver) => ({
+            ...driver.toObject(),
+            user: driver.user.toObject(),
+          })),
+          matchesCategory: categoryMatches.map((driver) => ({
+            ...driver.toObject(),
+            user: driver.user.toObject(),
+          })),
+        },
+      };
+      console.log(response);
+      return res.status(200).send(response);
+    }
     const response = {
-      matchesDestination: destinationMatches.map(driver => ({
-        ...driver.toObject(), // Convert Mongoose document to plain JavaScript object
-        user: driver.user.toObject(), // Spread user information
-      })),
-      matchesCategory: categoryMatches.map(driver => ({
-        ...driver.toObject(),
-        user: driver.user.toObject(),
-      })),
+      status: "no_matches",
+      message: "No matching drivers found.",
+      data: {
+        matchesDestination: [],
+        matchesCategory: [],
+      },
     };
-
+    console.log(response);
     return res.status(200).send(response);
   } catch (error) {
     console.error(error);
     throw new Error("Internal Server Error");
   }
 };
-
 
 module.exports = joinDriver;
 
