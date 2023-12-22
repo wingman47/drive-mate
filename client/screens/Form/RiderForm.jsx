@@ -56,6 +56,7 @@ const RiderForm = () => {
       if (data.status === 'success') {
         dispatch(setSameDestination(data.data.matchesDestination));
         dispatch(setSameCategory(data.data.matchesCategory));
+        navigation.navigate('DriverOptions');
       } else {
         console.log('No matching drivers found.');
       }
@@ -69,7 +70,7 @@ const RiderForm = () => {
   // useEffect(() => {
   //   ! Todo : no Diver found page
   //   if (!matchedByDestination && !matchedByCategory && !matchedByRadius) return;
-  //   else navigation.navigate('Home');
+  //   else navigation.navigate('DriverOptions');
   // }, [matchedByDestination, matchedByCategory, matchedByRadius]);
 
   const showDatePicker = () => {
@@ -123,10 +124,11 @@ const RiderForm = () => {
   };
 
   const categories = [
-    {label: 'Work', value: 'work'},
-    {label: 'Shopping', value: 'shopping'},
-    {label: 'Education', value: 'education'},
-    {label: 'Movie', value: 'movie'},
+    {label: 'Work', value: 'Work'},
+    {label: 'Shopping', value: 'Shopping'},
+    {label: 'Education', value: 'Education'},
+    {label: 'Movie', value: 'Movie'},
+    {label: 'None', value: 'None'},
   ];
 
   return (
