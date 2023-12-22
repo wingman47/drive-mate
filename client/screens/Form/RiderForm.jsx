@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
   Alert,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -14,18 +13,19 @@ import Time from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import tw from 'twrnc';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
-import { selectSameDestination,selectCategory,selectRadius } from '../../slice/availableDriversSlice';
-import {selectDestination} from '../../slice/navSlice';
-import axios from 'axios';
+import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 import {
+  selectSameDestination,
+  selectCategory,
+  selectRadius,
   setSameCategory,
   setSameDestination,
 } from '../../slice/availableDriversSlice';
+import {selectDestination} from '../../slice/navSlice';
+import axios from 'axios';
 
 const RiderForm = () => {
-  a;
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
   const [date, setDate] = useState('');
@@ -35,8 +35,9 @@ const RiderForm = () => {
 
   const matchedByDestination = useSelector(selectDestination);
   const matchedByCategory = useSelector(selectCategory);
-  const matchedByRadius = useSelector(selectDeselectRadiusstination);
+  const matchedByRadius = useSelector(selectRadius);
   const navigation = useNavigation();
+  const destination = useSelector(selectDestination);
 
   const handleSubmit = async () => {
     try {
@@ -45,10 +46,14 @@ const RiderForm = () => {
         return;
       }
       const {response} = await axios.post(`${ipconfig}/api/rider/joindriver`, {
-        destination: selectDestination,
+        destination: {
+          type: 'Point',
+          coordinates: [destination.location.lat, destination.location.lng],
+        },
         category: selectedCategory,
         preferredDateTime: formattedDateAndTime,
       });
+      console.log('response recieved ', response);
       dispatch(setSameDestination(response.matchesDestination));
       dispatch(setSameCategory(response.matchesCategory));
       // ! TODO: radius
@@ -57,15 +62,12 @@ const RiderForm = () => {
     }
   };
 
-    // Redirection to the Diver Options page.
-    useEffect(()=>{
-      // ! Todo : no Diver found page 
-      if(!matchedByDestination && !matchedByCategory && !matchedByRadius)  return;
-
-      else 
-      navigation.navigate('Home');
-
-  },[matchedByDestination,matchedByCategory,matchedByRadius]);
+  // Redirection to the Diver Options page.
+  useEffect(() => {
+    // ! Todo : no Diver found page
+    if (!matchedByDestination && !matchedByCategory && !matchedByRadius) return;
+    else navigation.navigate('Home');
+  }, [matchedByDestination, matchedByCategory, matchedByRadius]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -101,14 +103,17 @@ const RiderForm = () => {
     setSelectedCategory(category);
   };
 
-  const handleTimeAndDateConfirm = selectedTime => {
-    hideTimePicker();
-    const formattedTime = moment.utc(selectedTime).format('HH:mm:ss');
-    const combinedDateTime = moment
-      .utc(`${date}T${formattedTime}`)
-      .toISOString();
-    const formattedDateAndTime = combinedDateTime.slice(0, -5) + 'Z';
-    setFormattedDateAndTime(formattedDateAndTime);
+  const handleTimeAndDateConfirm = async selectedTime => {
+    return new Promise(resolve => {
+      hideTimePicker();
+      const formattedTime = moment.utc(selectedTime).format('HH:mm:ss');
+      const combinedDateTime = moment
+        .utc(`${date}T${formattedTime}`)
+        .toISOString();
+      const formattedDateAndTime = combinedDateTime.slice(0, -5) + 'Z';
+      setFormattedDateAndTime(formattedDateAndTime);
+      resolve(formattedDateAndTime);
+    });
   };
 
   const categories = [
@@ -172,9 +177,9 @@ const RiderForm = () => {
 
         <TouchableOpacity
           style={[styles.button, tw`bg-green-600 font-bold py-4`]}
-          onPress={() => {
+          onPress={async () => {
             console.log('Form submitted:', {date, time, selectedCategory});
-            handleTimeAndDateConfirm();
+            await handleTimeAndDateConfirm();
             handleSubmit();
           }}>
           <Text style={styles.buttonText}>Submit</Text>
