@@ -36,17 +36,18 @@ const joinDriver = async (req, res) => {
       };
       console.log(response);
       return res.status(200).send(response);
+    } else {
+      const response = {
+        status: "no_matches",
+        message: "No matching drivers found.",
+        data: {
+          matchesDestination: [],
+          matchesCategory: [],
+        },
+      };
+      console.log(response);
+      return res.status(200).send(response);
     }
-    const response = {
-      status: "no_matches",
-      message: "No matching drivers found.",
-      data: {
-        matchesDestination: [],
-        matchesCategory: [],
-      },
-    };
-    console.log(response);
-    return res.status(200).send(response);
   } catch (error) {
     console.error(error);
     throw new Error("Internal Server Error");
