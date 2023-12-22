@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import tw from 'tailwind-react-native-classnames';
-import { FontAwesome } from '@expo/vector-icons';
+import tw from 'twrnc';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
   const DriverCreatedConfirm = () => {
     return (
@@ -12,7 +13,7 @@ import { FontAwesome } from '@expo/vector-icons';
         </View>
           <View style={styles.card}>
             <View style={[styles.cardHeader,tw`mx-auto`]}>
-              <FontAwesome name="check" size={24} color="#28a745" />
+              <Icon name="check" size={24} color="#28a745" />
               <Text style={tw`text-2xl font-bold ml-2`}>Dimpy bhai</Text>
             </View>
 
@@ -20,13 +21,13 @@ import { FontAwesome } from '@expo/vector-icons';
 
             <View style={[styles.infoRow,tw`mx-6`]}>
               <View style={tw`flex items-center`}>
-                <FontAwesome name="users" size={20} color="#333" /> 
+                <Icon name="users" size={20} color="#333" /> 
                 <Text style={styles.infoLabel}>Seats</Text>
                 <Text style={styles.infoText}>3</Text>
               </View>
 
               <View style={tw`flex items-center`}>
-                <FontAwesome name="calendar" size={20} color="#333" />
+                <Icon name="calendar" size={20} color="#333" />
                 <Text style={styles.infoLabel}>Date</Text>
                 <Text style={styles.infoText}>12 Jan, 12:55</Text>
               </View>
