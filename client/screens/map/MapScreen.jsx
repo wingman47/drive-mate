@@ -31,6 +31,13 @@ const MapScreen = () => {
                 headerShown: false,
             }}
             />
+            <Stack.Screen
+            name="DiverOptions"
+            component={DriverOptions}
+            options={{
+                headerShown: false,
+            }}
+            />
         </Stack.Navigator>
       </View>
     </View>

@@ -14,6 +14,9 @@ import Time from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import tw from 'twrnc';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { selectDestination,selectCategory,selectRadius } from '../../slice/availableDriversSlice';
 import {selectDestination} from '../../slice/navSlice';
 import axios from 'axios';
 import {
@@ -29,6 +32,12 @@ const RiderForm = () => {
   const [time, setTime] = useState('');
   const [formattedDateAndTime, setFormattedDateAndTime] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+
+  const matchedByDestination = useSelector(selectDestination);
+  const matchedByCategory = useSelector(selectCategory);
+  const matchedByRadius = useSelector(selectDeselectRadiusstination);
+  const navigation = useNavigation();
+
   const handleSubmit = async () => {
     try {
       if (!selectedCategory || !formattedDateAndTime) {
@@ -47,6 +56,16 @@ const RiderForm = () => {
       console.log(error);
     }
   };
+
+    // Redirection to the Diver Options page.
+    useEffect(()=>{
+      // ! Todo : no Diver found page 
+      if(!matchedByDestination && !matchedByCategory && !matchedByRadius)  return;
+
+      else 
+      navigation.navigate('Home');
+
+  },[matchedByDestination,matchedByCategory,matchedByRadius]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
