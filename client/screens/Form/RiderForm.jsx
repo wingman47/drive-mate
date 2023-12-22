@@ -1,12 +1,5 @@
-import React, {useState,useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Alert,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import {Icon} from '@rneui/themed';
@@ -14,15 +7,18 @@ import Time from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import tw from 'twrnc';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
-import { selectSameDestination,selectCategory,selectRadius } from '../../slice/availableDriversSlice';
-import {selectDestination} from '../../slice/navSlice';
-import axios from 'axios';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
 import {
+  selectSameDestination,
+  selectCategory,
+  selectRadius,
   setSameCategory,
   setSameDestination,
 } from '../../slice/availableDriversSlice';
+import {selectDestination} from '../../slice/navSlice';
+import axios from 'axios';
+import ipconfig from '../../ipconfig';
 
 const RiderForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -32,38 +28,50 @@ const RiderForm = () => {
   const [formattedDateAndTime, setFormattedDateAndTime] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
 
-  const matchedByDestination = useSelector(selectSameDestination);
+  const matchedByDestination = useSelector(selectDestination);
   const matchedByCategory = useSelector(selectCategory);
   const matchedByRadius = useSelector(selectRadius);
   const navigation = useNavigation();
-
+  const destination = useSelector(selectDestination);
+  const sameDestination = useSelector(selectSameDestination);
+  const dispatch = useDispatch();
   const handleSubmit = async () => {
     try {
+      console.log('formattedDateAndTime ', formattedDateAndTime);
+      console.log(destination.location.lat, destination.location.lng);
       if (!selectedCategory || !formattedDateAndTime) {
         Alert.alert('Please fill the fields');
         return;
       }
-      const {response} = await axios.post(`${ipconfig}/api/rider/joindriver`, {
-        destination: selectDestination,
+      const response = await axios.post(`${ipconfig}/api/rider/joindriver`, {
+        destination: {
+          type: 'Point',
+          coordinates: [destination.location.lat, destination.location.lng],
+        },
         category: selectedCategory,
         preferredDateTime: formattedDateAndTime,
       });
-      dispatch(setSameDestination(response.matchesDestination));
-      dispatch(setSameCategory(response.matchesCategory));
+      const {data} = response;
+      console.log('response recieved ', response);
+      if (response.status == 'success') {
+        dispatch(setSameDestination(data.matchesDestination));
+        dispatch(setSameCategory(data.matchesCategory));
+        console.log('same destination ', sameDestination);
+      } else {
+        console.log('No matching drivers found.');
+      }
       // ! TODO: radius
     } catch (error) {
       console.log(error);
     }
   };
 
-    // Redirection to the Diver Options page.
-    useEffect(()=>{
-      if (matchedByDestination.length > 0 || matchedByCategory.length > 0 || matchedByRadius.length > 0) {
-        navigation.navigate('DriverOptionsScreen');
-      } else {
-        navigation.navigate('NoDriverScreen');
-      }
-    }, [matchedByDestination, matchedByCategory, matchedByRadius]);
+  // Redirection to the Diver Options page.
+  // useEffect(() => {
+  //   ! Todo : no Diver found page
+  //   if (!matchedByDestination && !matchedByCategory && !matchedByRadius) return;
+  //   else navigation.navigate('Home');
+  // }, [matchedByDestination, matchedByCategory, matchedByRadius]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -99,14 +107,17 @@ const RiderForm = () => {
     setSelectedCategory(category);
   };
 
-  const handleTimeAndDateConfirm = selectedTime => {
-    hideTimePicker();
-    const formattedTime = moment.utc(selectedTime).format('HH:mm:ss');
-    const combinedDateTime = moment
-      .utc(`${date}T${formattedTime}`)
-      .toISOString();
-    const formattedDateAndTime = combinedDateTime.slice(0, -5) + 'Z';
-    setFormattedDateAndTime(formattedDateAndTime);
+  const handleTimeAndDateConfirm = async selectedTime => {
+    return new Promise(resolve => {
+      hideTimePicker();
+      const formattedTime = moment.utc(selectedTime).format('HH:mm:ss');
+      const combinedDateTime = moment
+        .utc(`${date}T${formattedTime}`)
+        .toISOString();
+      const formattedDateAndTime = combinedDateTime.slice(0, -7) + "00" + 'Z';
+      setFormattedDateAndTime(formattedDateAndTime);
+      resolve(formattedDateAndTime);
+    });
   };
 
   const categories = [
@@ -170,9 +181,8 @@ const RiderForm = () => {
 
         <TouchableOpacity
           style={[styles.button, tw`bg-green-600 font-bold py-4`]}
-          onPress={() => {
-            console.log('Form submitted:', {date, time, selectedCategory});
-            handleTimeAndDateConfirm();
+          onPress={async () => {
+            await handleTimeAndDateConfirm();
             handleSubmit();
           }}>
           <Text style={styles.buttonText}>Submit</Text>
