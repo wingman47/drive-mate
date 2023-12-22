@@ -1,7 +1,10 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
+import {selectUser} from '../../slice/authSlice';
+import { useSelector } from 'react-redux';
 
 const ProfileScreen = () => {
+  const user = useSelector(selectUser);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -9,17 +12,17 @@ const ProfileScreen = () => {
           source={{uri: 'https://placekitten.com/200/200'}}
           style={styles.profileImage}
         />
-        <Text style={styles.username}>User name</Text>
+        <Text style={styles.username}>{user.name}</Text>
       </View>
 
       <View style={styles.infoContainer}>
-        <Text style={styles.label}>Email:</Text>
-        <Text style={styles.infoText}>example@gmail.com</Text>
+        <Text style={styles.label}>Email</Text>
+        <Text style={styles.infoText}>{user.email}</Text>
 
-        <Text style={styles.label}>Phone:</Text>
+        <Text style={styles.label}>Phone</Text>
         <Text style={styles.infoText}>+91 8294579845</Text>
 
-        <Text style={styles.label}>Location:</Text>
+        <Text style={styles.label}>Location</Text>
         <Text style={styles.infoText}>City, Country</Text>
       </View>
     </View>

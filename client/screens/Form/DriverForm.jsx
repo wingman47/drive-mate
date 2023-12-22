@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import RNPickerSelect from 'react-native-picker-select';
@@ -13,9 +14,11 @@ import Time from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import tw from 'twrnc';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {selectUser} from '../../slice/authSlice';
 import {selectDestination, selectOrigin} from '../../slice/navSlice';
+import axios from 'axios';
+import ipconfig from '../../ipconfig';
 
 const DriverForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -26,21 +29,28 @@ const DriverForm = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [numberOfSeats, setNumberOfSeats] = useState('');
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+  const origin = useSelector(selectOrigin);
+  const destination = useSelector(selectDestination);
 
   const handleSubmit = async () => {
-    // ! TODO: redux
     try {
+      console.log(formattedDateAndTime);
+      console.log(user._id);
+      console.log(numberOfSeats);
+      console.log(destination);
+      console.log(origin);
       if (!numberOfSeats || !selectedCategory || !formattedDateAndTime) {
-        Alert.alert('Please fill the fields');
+        Alert.alert('Please fill all the fields');
         return;
       }
       const {savedDriver} = await axios.post(
-        'http://192.168.1.15:8080/api/driver/queue/createdriver',
+        `${ipconfig}/api/driver/queue/createdriver`,
         {
-          userId: selectUser._id,
-          origin: selectOrigin,
-          destination: selectDestination,
-          category,
+          userId: user._id,
+          origin,
+          destination,
+          category: selectedCategory,
           preferredDateTime: formattedDateAndTime,
           numberOfSeats,
         },
@@ -85,13 +95,16 @@ const DriverForm = () => {
   };
 
   const handleTimeAndDateConfirm = selectedTime => {
-    hideTimePicker();
-    const formattedTime = moment.utc(selectedTime).format('HH:mm:ss');
-    const combinedDateTime = moment
-      .utc(`${date}T${formattedTime}`)
-      .toISOString();
-    const formattedDateAndTime = combinedDateTime.slice(0, -5) + 'Z';
-    setFormattedDateAndTime(formattedDateAndTime);
+    return new Promise(resolve => {
+      hideTimePicker();
+      const formattedTime = moment.utc(selectedTime).format('HH:mm:ss');
+      const combinedDateTime = moment
+        .utc(`${date}T${formattedTime}`)
+        .toISOString();
+      const formattedDateAndTime = combinedDateTime.slice(0, -5) + 'Z';
+      setFormattedDateAndTime(formattedDateAndTime);
+      resolve(formattedDateAndTime);
+    });
   };
 
   const categories = [
@@ -165,8 +178,11 @@ const DriverForm = () => {
         <TouchableOpacity
           style={[styles.button, tw`bg-red-600 font-bold py-4`]}
           onPress={() => {
-            console.log('Form submitted:', {date, time, selectedCategory});
             handleTimeAndDateConfirm();
+            console.log('Form submitted:', {
+              formattedDateAndTime,
+              selectedCategory,
+            });
             handleSubmit();
           }}>
           <Text style={[styles.buttonText, tw`font-bold text-xl`]}>Submit</Text>

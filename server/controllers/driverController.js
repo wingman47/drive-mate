@@ -5,7 +5,6 @@ const userModel = require("../models/userModel");
 const createDriver = async (req, res) => {
   try {
     const newDriver = new Driver(req.body);
-
     const {
       user: userId,
       origin,
@@ -14,6 +13,7 @@ const createDriver = async (req, res) => {
       preferredDateTime,
     } = req.body;
 
+    console.log(userId);
     // Save the new driver
     const savedDriver = await newDriver.save();
     // Find the user by ID
@@ -26,7 +26,7 @@ const createDriver = async (req, res) => {
     user.schedules.push({ origin, destination, category, preferredDateTime });
 
     await user.save();
-
+    console.log("added ", savedDriver);
     res.status(201).json(savedDriver);
   } catch (error) {
     res.status(500).json({ error: error.message });

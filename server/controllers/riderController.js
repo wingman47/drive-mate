@@ -20,6 +20,7 @@ const joinDriver = async (req, res) => {
       matchesDestination: destinationMatches,
       matchesCategory: categoryMatches,
     };
+    console.log("matched these drivers: ", response);
     return res.status(200).send(response);
   } catch (error) {
     console.error(error);

@@ -8,6 +8,7 @@ import axios from 'axios';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch} from 'react-redux';
 import {setLogin} from '../../slice/authSlice';
+import ipconfig from '../../ipconfig';
 
 const Register = ({navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -25,10 +26,11 @@ const Register = ({navigation}) => {
         return;
       }
       setLoading(false);
-      const user = await axios.post(
-        'http://192.168.1.15:8080/api/v1/auth/register',
-        {name, email, password},
-      );
+      const user = await axios.post(`${ipconfig}/api/v1/auth/register`, {
+        name,
+        email,
+        password,
+      });
       // console.log(user.data.user);
       dispatch(
         setLogin({

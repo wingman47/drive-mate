@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import RNPickerSelect from 'react-native-picker-select';
@@ -13,30 +14,32 @@ import Time from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import tw from 'twrnc';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {selectDestination} from '../../slice/navSlice';
+import axios from 'axios';
+import {
+  setSameCategory,
+  setSameDestination,
+} from '../../slice/availableDriversSlice';
 
 const RiderForm = () => {
+  a;
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [formattedDateAndTime, setFormattedDateAndTime] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [numberOfSeats, setNumberOfSeats] = useState('');
-
   const handleSubmit = async () => {
     try {
       if (!selectedCategory || !formattedDateAndTime) {
         Alert.alert('Please fill the fields');
         return;
       }
-      const {response} = await axios.post(
-        'http://192.168.1.15:8080/api/driver/queue/createdriver',
-        {
-          destination: selectDestination,
-          category,
-          preferredDateTime: formattedDateAndTime,
-        },
-      );
+      const {response} = await axios.post(`${ipconfig}/api/rider/joindriver`, {
+        destination: selectDestination,
+        category: selectedCategory,
+        preferredDateTime: formattedDateAndTime,
+      });
       dispatch(setSameDestination(response.matchesDestination));
       dispatch(setSameCategory(response.matchesCategory));
       // ! TODO: radius

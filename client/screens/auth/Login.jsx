@@ -8,7 +8,8 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectUser, setLogin} from '../../slice/authSlice';
-import { useNavigation } from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native';
+import ipconfig from '../../ipconfig';
 
 const Login = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -27,15 +28,17 @@ const Login = () => {
         return;
       }
       setLoading(false);
-      const user = await axios.post(
-        'http://192.168.1.15:8080/api/v1/auth/login',
+      const response = await axios.post(
+        `${ipconfig}/api/v1/auth/login`,
         {email, password},
       );
+      console.log("response: ", response.data.user);
       dispatch(
         setLogin({
-          user: user.data.user,
+          user: response.data.user,
         }),
       );
+      console.log('user logged ', user);
       // Alert.alert(user && user.message);
     } catch (error) {
       Alert.alert(error);
@@ -45,12 +48,10 @@ const Login = () => {
   };
 
   // Redirection to the New page.
-  useEffect(()=>{
-    if(!user)  return;
-
-    else 
-    navigation.navigate('Home');
-  },[user]);
+  useEffect(() => {
+    if (!user) return;
+    else navigation.navigate('Home');
+  }, [user]);
 
   return (
     <KeyboardAwareScrollView>
