@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {
   View,
   Text,
@@ -25,7 +25,6 @@ import {
 } from '../../slice/availableDriversSlice';
 
 const RiderForm = () => {
-  a;
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
   const [date, setDate] = useState('');
@@ -33,9 +32,9 @@ const RiderForm = () => {
   const [formattedDateAndTime, setFormattedDateAndTime] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
 
-  const matchedByDestination = useSelector(selectDestination);
+  const matchedByDestination = useSelector(selectSameDestination);
   const matchedByCategory = useSelector(selectCategory);
-  const matchedByRadius = useSelector(selectDeselectRadiusstination);
+  const matchedByRadius = useSelector(selectRadius);
   const navigation = useNavigation();
 
   const handleSubmit = async () => {
@@ -59,13 +58,12 @@ const RiderForm = () => {
 
     // Redirection to the Diver Options page.
     useEffect(()=>{
-      // ! Todo : no Diver found page 
-      if(!matchedByDestination && !matchedByCategory && !matchedByRadius)  return;
-
-      else 
-      navigation.navigate('Home');
-
-  },[matchedByDestination,matchedByCategory,matchedByRadius]);
+      if (matchedByDestination.length > 0 || matchedByCategory.length > 0 || matchedByRadius.length > 0) {
+        navigation.navigate('DriverOptionsScreen');
+      } else {
+        navigation.navigate('NoDriverScreen');
+      }
+    }, [matchedByDestination, matchedByCategory, matchedByRadius]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);

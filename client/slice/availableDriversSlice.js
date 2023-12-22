@@ -11,13 +11,13 @@ export const availableDriversSlice = createSlice({
   initialState,
   reducers: {
     setSameDestination: (state, action) => {
-      state.sameDestination = state.sameDestination.concat(action.payload);
+      state.sameDestination = state?.sameDestination.concat(action.payload);
     },
     setSameCategory: (state, action) => {
-      state.sameCategory = state.sameCategory.concat(action.payload);
+      state.sameCategory = state?.sameCategory.concat(action.payload);
     },
     setRadius: (state, action) => {
-      state.radius = state.radius.concat(action.payload);
+      state.radius = state?.radius.concat(action.payload);
     },
   },
 });
@@ -27,8 +27,8 @@ export const {setSameDestination, setSameCategory, setRadius} =
 
 // Selectors
 export const selectSameDestination = state =>
-  state.availableDriversSlice.sameDestination;
-export const selectCategory = state => state.availableDriversSlice.sameCategory;
-export const selectRadius = state => state.availableDriversSlice.radius;
+  state.availableDriversSlice?.sameDestination;
+export const selectCategory = state => state.availableDriversSlice?.sameCategory;
+export const selectRadius = state => state.availableDriversSlice?.radius;
 
 export default availableDriversSlice.reducer;

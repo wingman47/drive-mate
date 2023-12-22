@@ -15,6 +15,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import DriverForm from './screens/Form/DriverForm';
 import RiderForm from './screens/Form/RiderForm';
 import ProfileScreen from './screens/profile/ProfileScreen';
+import NoDriverScreen from './screens/rider/NoDirverScreen';
+import DriverCreatedConfirm from './screens/driver/DriverCreatedConfirm';
+import DriverOptionsScreen from './screens/rider/DriverOptionsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -93,6 +96,23 @@ function App() {
                 component={RiderForm}
                 options={{headerShown: false}}
               />
+              {/* routing done after submition of the driver form  */}
+              <Stack.Screen
+                  name="DriverCreated"
+                  component={DriverCreatedConfirm}
+                  options={{headerShown: false}}
+                  />
+              {/* routing done to handle submition of the Rider form */}
+              <Stack.Screen
+                name="NoDriverScreen"
+                component={NoDriverScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="DriverOptions"
+                component={DriverOptionsScreen}
+                options={{headerShown: false}}
+                />
             </Stack.Navigator>
           </KeyboardAvoidingView>
         </SafeAreaProvider>
