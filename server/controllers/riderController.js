@@ -1,5 +1,7 @@
 const Driver = require("../models/driverModel");
 
+// JOIN DRIVER HAI BAS ISME POPULATE USE KAR LIA HAI
+
 const joinDriver = async (req, res) => {
   try {
     const { destination, category, preferredDateTime } = req.body;
@@ -7,26 +9,33 @@ const joinDriver = async (req, res) => {
     const destinationMatches = await Driver.find({
       destination,
       preferredDateTime,
-    });
+    }).populate('user'); // Assuming 'user' is the reference to the user model in the Driver model
 
     // Find drivers matching category, date, and time
     const categoryMatches = await Driver.find({
       category,
       preferredDateTime,
-    });
+    }).populate('user'); // Assuming 'user' is the reference to the user model in the Driver model
 
-    // Prepare response with labels
+    // Prepare response with labels and spread user information
     const response = {
-      matchesDestination: destinationMatches,
-      matchesCategory: categoryMatches,
+      matchesDestination: destinationMatches.map(driver => ({
+        ...driver.toObject(), // Convert Mongoose document to plain JavaScript object
+        user: driver.user.toObject(), // Spread user information
+      })),
+      matchesCategory: categoryMatches.map(driver => ({
+        ...driver.toObject(),
+        user: driver.user.toObject(),
+      })),
     };
-    console.log("matched these drivers: ", response);
+
     return res.status(200).send(response);
   } catch (error) {
     console.error(error);
     throw new Error("Internal Server Error");
   }
 };
+
 
 module.exports = joinDriver;
 
