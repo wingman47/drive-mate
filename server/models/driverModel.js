@@ -38,6 +38,12 @@ const driverSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  originAddress: {
+    type: String,
+  },
+  destinationAddress: {
+    type: String,
+  },
 });
 
 // Create a geospatial index for the 'origin' field
