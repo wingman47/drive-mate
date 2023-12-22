@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text ,TouchableOpacity} from 'react-native';
 import tw from 'twrnc';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -7,7 +7,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const categoryIconMap = new Map([
   ['Work', { color: '#FF2442', icon: 'home' }],
   ['Shopping', { color: '#FFB830', icon: 'shopping-bag' }],
-  ['Education', { color: '#AC0D0D', icon: 'graduation-cap' }],
+  ['Education', { color: '#A084E8', icon: 'graduation-cap' }],
   ['Movie', { color: '#3DB2FF', icon: 'film' }],
   ['None', { color: '#000', icon: 'circle' }],
 ]);
@@ -31,7 +31,13 @@ const DriverCard = ({name, destination, seats, date, time, category}) => {
   };
 
   return (
-    <View style={tw`mt-2 mx-2 p-4 bg-white shadow-md rounded-lg flex-row items-center`}>
+    <TouchableOpacity
+      style={tw`mt-2 mx-2 p-4 bg-white shadow-md rounded-lg flex-row items-center`}
+      onPress={() => {
+        // Handle press action here
+        console.log('Card pressed!');
+      }}
+    >
       <View style={[tw`bg-blue-500 rounded-full p-3 mr-3`, { backgroundColor: color }]}>
         {getIconComponent()}
       </View>
@@ -49,7 +55,7 @@ const DriverCard = ({name, destination, seats, date, time, category}) => {
           <Text style={tw`text-gray-600 ml-2`}>{date}, {time}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

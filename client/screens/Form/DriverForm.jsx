@@ -1,22 +1,15 @@
-import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Alert,
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import RNPickerSelect from 'react-native-picker-select';
-import {Icon} from '@rneui/themed';
+import { Icon } from '@rneui/themed';
 import Time from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import tw from 'twrnc';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useDispatch, useSelector} from 'react-redux';
-import {selectUser} from '../../slice/authSlice';
-import {selectDestination, selectOrigin} from '../../slice/navSlice';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser } from '../../slice/authSlice';
+import { selectDestination, selectOrigin } from '../../slice/navSlice';
 import axios from 'axios';
 import ipconfig from '../../ipconfig';
 
@@ -35,12 +28,11 @@ const DriverForm = () => {
 
   const handleSubmit = async () => {
     try {
-      console.log('formattedDateAndTime ', formattedDateAndTime);
       if (!numberOfSeats || !selectedCategory || !formattedDateAndTime) {
         Alert.alert('Please fill all the fields');
         return;
       }
-      const {savedDriver} = await axios.post(
+      const { savedDriver } = await axios.post(
         `${ipconfig}/api/driver/queue/createdriver`,
         {
           user: user._id,
@@ -97,33 +89,28 @@ const DriverForm = () => {
   const handleCategoryChange = category => {
     setSelectedCategory(category);
   };
-  const handleTimeAndDateConfirm = async (time,date) => {
+  
+  const handleTimeAndDateConfirm = async (time, date) => {
     return new Promise((resolve) => {
       hideTimePicker();
-      const formattedDateAndTime = `${date}T${time}Z`
-      console.log(formattedDateAndTime);
-
-      // const formattedTime = moment(selectedTime).format('HH:mm:ss');
-      // const combinedDateTime = moment(`${date}T${formattedTime}`).toISOString();
-      // const formattedDateAndTime = combinedDateTime.slice(0, -7) + '00' + 'Z';
-  
+      const formattedDateAndTime = `${date}T${time}Z`;
       setFormattedDateAndTime(formattedDateAndTime);
       resolve(formattedDateAndTime);
     });
   };
 
   const categories = [
-    {label: 'Work', value: 'Work'},
-    {label: 'Shopping', value: 'Shopping'},
-    {label: 'Education', value: 'Education'},
-    {label: 'Movie', value: 'Movie'},
-    {label: 'None', value: 'None'},
+    { label: 'Work', value: 'Work' },
+    { label: 'Shopping', value: 'Shopping' },
+    { label: 'Education', value: 'Education' },
+    { label: 'Movie', value: 'Movie' },
+    { label: 'None', value: 'None' },
   ];
 
   return (
     <KeyboardAwareScrollView>
-      <View style={[styles.container, tw`m-4 my-32 rounded-lg bg-white`]}>
-        <Text style={tw`text-red-600 font-bold text-center my-4 text-4xl`}>
+      <View style={[styles.container, tw`m-4 mt-16 rounded-lg bg-white`]}>
+        <Text style={tw`text-blue-600 font-bold text-center my-4 text-4xl`}>
           Create a Ride
         </Text>
         <Text style={styles.label}>Number of Seats</Text>
@@ -139,7 +126,7 @@ const DriverForm = () => {
           style={styles.inputContainer}
           onPress={showDatePicker}>
           <Icon
-            style={tw`p-2 bg-red-600 rounded-full w-10`}
+            style={tw`p-2 bg-blue-600 rounded-full w-10`}
             name="calendar"
             color="white"
             type="antdesign"
@@ -158,7 +145,7 @@ const DriverForm = () => {
           style={styles.inputContainer}
           onPress={showTimePicker}>
           <Time
-            style={tw`p-2 bg-red-600 rounded-full`}
+            style={tw`p-2 bg-blue-600 rounded-full`}
             name="clockcircleo"
             color="white"
             size={24}
@@ -177,13 +164,13 @@ const DriverForm = () => {
           items={categories}
           onValueChange={handleCategoryChange}
           value={selectedCategory}
-          placeholder={{label: 'Select a category', value: null}}
+          placeholder={{ label: 'Select a category', value: null }}
         />
 
         <TouchableOpacity
-          style={[styles.button, tw`bg-red-600 font-bold py-4`]}
+          style={[styles.button, tw`bg-blue-600 font-bold py-4`]}
           onPress={async () => {
-            await handleTimeAndDateConfirm(time,date);
+            await handleTimeAndDateConfirm(time, date);
             handleSubmit();
           }}>
           <Text style={[styles.buttonText, tw`font-bold text-xl`]}>Submit</Text>
@@ -202,14 +189,16 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 5,
-    marginTop: 10,
+    marginTop: 8,
+    fontWeight: "600",
+    color: "black"
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'red',
-    borderRadius: 5,
+    borderColor: 'blue',
+    borderRadius: 10,
     padding: 10,
     marginBottom: 15,
   },
@@ -221,7 +210,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
-    backgroundColor: '#ED3B3B',
+    backgroundColor: '#3498db',
   },
   buttonText: {
     color: 'white',

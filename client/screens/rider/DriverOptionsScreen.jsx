@@ -14,7 +14,7 @@ const DriverOptionsScreen = () => {
         <Map />
       </View>
 
-      <View style={tw`h-1/2 rounded-t-xl shadow-xl`}>
+      <View style={tw`h-1/2`}>
         <DriverOptions/>
     </View>
     </View>

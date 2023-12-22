@@ -1,8 +1,11 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import tw from 'twrnc';
 
 const NoDriverScreen = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -18,7 +21,7 @@ const NoDriverScreen = () => {
       <View style={tw`p-8 flex justify-center items-center`}>
         <TouchableOpacity
           style={tw`m-4 bg-green-500 rounded-lg p-3`}
-          onPress={() => console.log("Schedule for Later")}
+          onPress={() => navigation.navigate('RiderForm')}
         >
           <Text style={tw`text-white font-bold text-lg`}>Schedule for Later</Text>
         </TouchableOpacity>

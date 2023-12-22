@@ -59,6 +59,7 @@ const RiderForm = () => {
         navigation.navigate('DriverOptions');
       } else {
         console.log('No matching drivers found.');
+        navigation.navigate('NoDriverScreen')
       }
       // ! TODO: radius
     } catch (error) {
@@ -189,7 +190,7 @@ const RiderForm = () => {
             await handleTimeAndDateConfirm(time, date);
             handleSubmit();
           }}>
-          <Text style={styles.buttonText}>Submit</Text>
+          <Text style={[styles.buttonText, tw`font-bold text-xl`]}>Submit</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAwareScrollView>
@@ -206,13 +207,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     marginTop: 10,
+    fontWeight: '600',
+    color: 'black'
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'green',
-    borderRadius: 5,
+    borderRadius: 10,
     padding: 10,
     marginBottom: 15,
   },
