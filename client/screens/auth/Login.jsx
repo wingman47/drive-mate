@@ -54,14 +54,14 @@ const Login = () => {
   }, [user]);
 
   return (
-    <KeyboardAwareScrollView>
-      <Header />
-      {/* <Image
+    <View style={tw`flex-1`}>
+      {/* <Header /> */}
+      <Image
         source={{
           uri: 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?q=80&w=448&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         }}
         style={tw`h-1/3`}
-      /> */}
+      />
       <View
         style={{
           backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -94,7 +94,7 @@ const Login = () => {
           </View>
         </View>
       </View>
-    </KeyboardAwareScrollView>
+    </View>
   );
 };
 
