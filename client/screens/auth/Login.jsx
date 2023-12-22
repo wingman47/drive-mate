@@ -9,6 +9,7 @@ import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectUser, setLogin} from '../../slice/authSlice'; 
 import { useNavigation } from '@react-navigation/native'
+import ipconfig from '../../ipconfig';
 
 const Login = () => {
   const isDarkMode = useColorScheme() === 'dark';
