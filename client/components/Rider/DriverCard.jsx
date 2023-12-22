@@ -12,9 +12,7 @@ const categoryIconMap = new Map([
   ['None', { color: '#000', icon: 'circle' }],
 ]);
 
-const DriverCard = () => {
-  const [category, setCategory] = useState('Work');
-
+const DriverCard = ({name, destination, seats, date, time, category}) => {
   const { color, icon } = categoryIconMap.get(category);
 
   const getIconComponent = () => {
@@ -38,17 +36,17 @@ const DriverCard = () => {
         {getIconComponent()}
       </View>
       <View style={tw`flex-1`}>
-        <Text style={tw`text-xl font-bold`}>Dimpy bhai</Text>
-        <Text style={tw`text-gray-600`}>Destination Destination</Text>
+        <Text style={tw`text-xl font-bold`}>{name}</Text>
+        <Text style={tw`text-gray-600`}>{destination}</Text>
       </View>
       <View style={tw`flex-row mt-3`}>
         <View style={tw`flex items-center mr-4`}>
           <Text style={{ fontWeight: 'bold' }}>Seats</Text>
-          <Text style={{ color, fontWeight: 'bold' }}> 3</Text>
+          <Text style={{ color, fontWeight: 'bold' }}>{seats}</Text>
         </View>
         <View style={tw`flex items-center`}>
           <Text style={tw`font-bold`}>Date</Text>
-          <Text style={tw`text-gray-600 ml-2`}>12 Jan, 12:55</Text>
+          <Text style={tw`text-gray-600 ml-2`}>{date}, {time}</Text>
         </View>
       </View>
     </View>

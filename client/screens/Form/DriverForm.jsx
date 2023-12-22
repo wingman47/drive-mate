@@ -113,11 +113,11 @@ const DriverForm = () => {
   };
 
   const categories = [
-    {label: 'None', value: 'none'},
-    {label: 'Work', value: 'work'},
-    {label: 'Shopping', value: 'shopping'},
-    {label: 'Education', value: 'education'},
-    {label: 'Movie', value: 'movie'},
+    {label: 'Work', value: 'Work'},
+    {label: 'Shopping', value: 'Shopping'},
+    {label: 'Education', value: 'Education'},
+    {label: 'Movie', value: 'Movie'},
+    {label: 'None', value: 'None'},
   ];
 
   return (
