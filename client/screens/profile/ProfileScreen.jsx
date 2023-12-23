@@ -23,7 +23,7 @@ const ProfileScreen = () => {
         <Text style={styles.infoText}>+91 8294579845</Text>
 
         <Text style={styles.label}>Location</Text>
-        <Text style={styles.infoText}>City, Country</Text>
+        <Text style={styles.infoText}>City, India</Text>
       </View>
     </View>
   );

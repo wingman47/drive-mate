@@ -12,6 +12,8 @@ import { selectUser } from '../../slice/authSlice';
 import { selectDestination, selectOrigin } from '../../slice/navSlice';
 import axios from 'axios';
 import ipconfig from '../../ipconfig';
+import {useNavigation} from '@react-navigation/native';
+
 
 const DriverForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -25,6 +27,8 @@ const DriverForm = () => {
   const user = useSelector(selectUser);
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
+  const navigation = useNavigation();
+  const [res,setRes] = useState({});
 
   const handleSubmit = async () => {
     try {
@@ -32,7 +36,7 @@ const DriverForm = () => {
         Alert.alert('Please fill all the fields');
         return;
       }
-      const { savedDriver } = await axios.post(
+      const savedDriver = await axios.post(
         `${ipconfig}/api/driver/queue/createdriver`,
         {
           user: user._id,
@@ -51,6 +55,17 @@ const DriverForm = () => {
           destinationAddress: destination.description,
         },
       );
+      const {data} = savedDriver;
+      if (data.user) {
+        // Alert.alert('Sucessfully Created the request');
+        setTimeout(() => {
+          navigation.navigate('DriverCreated');
+        }, 300);
+      }else
+      {
+        Alert.alert('Enter form again');
+      }
+      console.log(data);
       // dispatch();
     } catch (error) {
       console.log(error);
