@@ -1,9 +1,12 @@
 const Driver = require("../models/driverModel");
+const scheduleModel = require("../models/scheduleModel");
 const userModel = require("../models/userModel");
 
 // Example route to create a new driver
 const createDriver = async (req, res) => {
   try {
+    const userIDD = req.body.user;
+    console.log(userIDD);
     const newDriver = new Driver(req.body);
     const {
       user: userId,
@@ -13,7 +16,6 @@ const createDriver = async (req, res) => {
       preferredDateTime,
     } = req.body;
 
-    console.log(userId);
     // Save the new driver
     const savedDriver = await newDriver.save();
     // Find the user by ID
@@ -23,8 +25,14 @@ const createDriver = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
     // Adding new Schedule
-    // user.schedules.push({ origin, destination, category, preferredDateTime });
-    // ! TODO: create new schedule
+    const newSchedule = await new scheduleModel({
+      origin,
+      destination,
+      category,
+      preferredDateTime,
+      status: "confirmed",
+    }).save();
+    user.schedules.push(newSchedule._id);
     await user.save();
     console.log("added ", savedDriver);
     res.status(201).json(savedDriver);

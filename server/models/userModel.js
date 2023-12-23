@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const scheduleSchema = require("../models/scheduleModel");
 /*
   When a rider sends a request to a driver it gets scheduled for both driver and the rider (it should contain id of driver who is requested and the rider id as well) but with a pending status (already set by default). 
   
@@ -42,7 +41,13 @@ const userSchema = new mongoose.Schema(
     schedules: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "scheduledSchema",
+        ref: "scheduleSchema",
+      },
+    ],
+    request: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "requestSchema",
       },
     ],
   },

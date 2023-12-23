@@ -1,18 +1,15 @@
 const mongoose = require("mongoose");
-const riderModel = require("./userModel");
-const driverModel = require("./driverModel");
-
 const Schema = mongoose.Schema;
 
 const requestSchema = new Schema({
-  rider: { type: Schema.Types.ObjectId, 
-    ref: "riderModel", 
-    required: true 
-},
-  driver:{
+  rider: { type: Schema.Types.ObjectId, ref: "riderModel", required: true },
+  driver: {
     type: Schema.Types.ObjectId,
     ref: "driverModel",
     required: true,
+  },
+  preferredDateTme: {
+    Type: String,
   },
   status: { type: String, enum: ["pending", "accepted"], default: "pending" },
 });

@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-const User = require("./userModel");
-
 const driverSchema = new mongoose.Schema({
   origin: {
     type: {

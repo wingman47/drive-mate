@@ -1,4 +1,7 @@
 const Driver = require("../models/driverModel");
+const RequestModel = require("../models/requestModel");
+const scheduleModel = require("../models/scheduleModel");
+const userModel = require("../models/userModel");
 
 // JOIN DRIVER HAI BAS ISME POPULATE USE KAR LIA HAI
 
@@ -54,7 +57,60 @@ const joinDriver = async (req, res) => {
   }
 };
 
-module.exports = joinDriver;
+const requestDriver = async (req, res) => {
+  try {
+    // rider id, driver id, preferredDateTime
+    const { riderId, driverId, preferredDateTime } = req.body;
+
+    // Find the driver
+    const queuedDriver = await Driver.findOne({ _id: driverId });
+    if (!queuedDriver) {
+      return res.status(404).json({ error: "Driver not found" });
+    }
+
+    const { origin, destination, category } = queuedDriver;
+
+    // Create a new schedule for the rider
+    const newSchedule = await new scheduleModel({
+      origin,
+      destination,
+      category,
+      preferredDateTime,
+    }).save();
+
+    // Find the rider and add the new schedule with pending status
+    const rider = await userModel.findById(riderId);
+    if (!rider) {
+      return res.status(404).json({ error: "Rider not found" });
+    }
+
+    rider.schedules.push(newSchedule._id);
+    await rider.save();
+
+    // Create a new request for the driver
+    const newRequest = await new RequestModel({
+      rider: riderId,
+      driver: driverId,
+      preferredDateTime,
+    }).save();
+
+    // Find the driver (user) associated with the queued driver
+    const driver = await userModel.findById(queuedDriver.user);
+    if (!driver) {
+      return res.status(404).json({ error: "Driver not found" });
+    }
+    console.log(driver);
+    driver.request.push(newRequest._id);
+    await driver.save();
+    console.log(newRequest._id);
+
+    res.status(201).json({ message: "Request successful" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { joinDriver, requestDriver };
 
 /*
 destructure: date, time, destination, category
