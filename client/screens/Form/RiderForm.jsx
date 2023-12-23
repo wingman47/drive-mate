@@ -28,12 +28,8 @@ const RiderForm = () => {
   const [formattedDateAndTime, setFormattedDateAndTime] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
 
-  const matchedByDestination = useSelector(selectDestination);
-  const matchedByCategory = useSelector(selectCategory);
-  const matchedByRadius = useSelector(selectRadius);
   const navigation = useNavigation();
   const destination = useSelector(selectDestination);
-  const sameDestination = useSelector(selectSameDestination);
   const dispatch = useDispatch();
   const handleSubmit = async () => {
     try {

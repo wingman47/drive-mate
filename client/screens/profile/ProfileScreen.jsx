@@ -1,70 +1,85 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
-import {selectUser} from '../../slice/authSlice';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import { useSelector } from 'react-redux';
+import { selectUser } from '../../slice/authSlice';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ProfileScreen = () => {
   const user = useSelector(selectUser);
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={{uri: 'https://placekitten.com/200/200'}}
+          source={{ uri: 'https://placekitten.com/300/300' }}
           style={styles.profileImage}
         />
         <Text style={styles.username}>{user.name}</Text>
       </View>
 
       <View style={styles.infoContainer}>
-        <Text style={styles.label}>Email</Text>
-        <Text style={styles.infoText}>{user.email}</Text>
+        <TouchableOpacity style={styles.infoItem}>
+          <Icon name="email" size={24} color="#2196f3" />
+          <Text style={styles.infoText}>{user.email}</Text>
+        </TouchableOpacity>
 
-        <Text style={styles.label}>Phone</Text>
-        <Text style={styles.infoText}>+91 8294579845</Text>
+        <TouchableOpacity style={styles.infoItem}>
+          <Icon name="phone" size={24} color="#4caf50" />
+          <Text style={styles.infoText}>+91 8294579845</Text>
+        </TouchableOpacity>
 
-        <Text style={styles.label}>Location</Text>
-        <Text style={styles.infoText}>City, India</Text>
+        <TouchableOpacity style={styles.infoItem}>
+          <Icon name="map-marker" size={24} color="#ffc107" />
+          <Text style={styles.infoText}>City, India</Text>
+        </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    // backgroundColor: '#fafafa',
   },
   header: {
     alignItems: 'center',
-    padding: 30,
-    backgroundColor: '#007bff',
+    padding: 40,
+    backgroundColor: '#2196f3',
   },
   profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderWidth: 2,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    borderWidth: 4,
     borderColor: '#fff',
   },
   username: {
-    marginTop: 15,
-    fontSize: 24,
+    marginTop: 20,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#fff',
   },
   infoContainer: {
     padding: 30,
+    // backgroundColor: '#f0f0f0'
   },
-  label: {
-    fontSize: 18,
-    marginBottom: 10,
-    fontWeight: 'bold',
-    color: '#333',
+  infoItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
   },
   infoText: {
+    marginLeft: 15,
     fontSize: 18,
-    marginBottom: 15,
-    color: '#666',
+    color: '#333',
   },
 });
 

@@ -14,7 +14,6 @@ import axios from 'axios';
 import ipconfig from '../../ipconfig';
 import {useNavigation} from '@react-navigation/native';
 
-
 const DriverForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
