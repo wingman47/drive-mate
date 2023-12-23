@@ -23,8 +23,8 @@ const createDriver = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
     // Adding new Schedule
-    user.schedules.push({ origin, destination, category, preferredDateTime });
-
+    // user.schedules.push({ origin, destination, category, preferredDateTime });
+    // ! TODO: create new schedule
     await user.save();
     console.log("added ", savedDriver);
     res.status(201).json(savedDriver);
