@@ -1,9 +1,9 @@
 const express = require("express");
-const { joinDriver, requestDriver } = require("../controllers/riderController");
+const { findDrivers, requestDriver } = require("../controllers/riderController");
 
 const router = express.Router();
 
-router.post("/joindriver", joinDriver);
+router.post("/finddrivers", findDrivers);
 router.post("/requestdriver", requestDriver);
 
 module.exports = router;

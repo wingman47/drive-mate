@@ -38,13 +38,19 @@ const userSchema = new mongoose.Schema(
       min: 6,
       max: 64,
     },
+    outgoingRequests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "requestSchema",
+      },
+    ],
     schedules: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "scheduleSchema",
       },
     ],
-    request: [
+    incomingRequests: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "requestSchema",

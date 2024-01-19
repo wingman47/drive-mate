@@ -39,7 +39,7 @@ const RiderForm = () => {
         Alert.alert('Please fill the fields');
         return;
       }
-      const response = await axios.post(`${ipconfig}/api/rider/joindriver`, {
+      const response = await axios.post(`${ipconfig}/api/rider/finddrivers`, {
         destination: {
           type: 'Point',
           coordinates: [destination.location.lat, destination.location.lng],

@@ -3,9 +3,8 @@ const RequestModel = require("../models/requestModel");
 const scheduleModel = require("../models/scheduleModel");
 const userModel = require("../models/userModel");
 
-// JOIN DRIVER HAI BAS ISME POPULATE USE KAR LIA HAI
-
-const joinDriver = async (req, res) => {
+// finds the driver based on 3 conditions: destination, category, preferredDateTime
+const findDrivers = async (req, res) => {
   try {
     const { destination, category, preferredDateTime } = req.body;
     // Find drivers matching destination, date, and time
@@ -13,13 +12,13 @@ const joinDriver = async (req, res) => {
     const destinationMatches = await Driver.find({
       destination,
       preferredDateTime,
-    }).populate("user"); // Assuming 'user' is the reference to the user model in the Driver model
+    }).populate("user"); // 'user' is the reference to the user model in the Driver model
 
     // Find drivers matching category, date, and time
     const categoryMatches = await Driver.find({
       category,
       preferredDateTime,
-    }).populate("user"); // Assuming 'user' is the reference to the user model in the Driver model
+    }).populate("user"); // 'user' is the reference to the user model in the Driver model
 
     // Prepare response with labels and spread user information
     if (destinationMatches.length > 0 || categoryMatches.length > 0) {
@@ -70,29 +69,11 @@ const requestDriver = async (req, res) => {
 
     const { origin, destination, category } = queuedDriver;
 
-    // Create a new schedule for the rider
-    const newSchedule = await new scheduleModel({
-      origin,
-      destination,
-      category,
-      preferredDateTime,
-    }).save();
-
     // Find the rider and add the new schedule with pending status
     const rider = await userModel.findById(riderId);
     if (!rider) {
       return res.status(404).json({ error: "Rider not found" });
     }
-
-    rider.schedules.push(newSchedule._id);
-    await rider.save();
-
-    // Create a new request for the driver
-    const newRequest = await new RequestModel({
-      rider: riderId,
-      driver: driverId,
-      preferredDateTime,
-    }).save();
 
     // Find the driver (user) associated with the queued driver
     const driver = await userModel.findById(queuedDriver.user);
@@ -100,9 +81,23 @@ const requestDriver = async (req, res) => {
       return res.status(404).json({ error: "Driver not found" });
     }
     console.log(driver);
-    driver.request.push(newRequest._id);
+
+    const outgoingRequest = await new RequestModel({
+      requestedByRider: riderId,
+      queueDriverId: queuedDriver._id,
+      origin,
+      destination,
+      category,
+      preferredDateTime,
+    }).save();
+
+    // push request as outgoing for the rider
+    rider.outgoingRequests.push(outgoingRequest._id);
+    await rider.save();
+
+    // push request as incoming for the driver
+    driver.incomingRequests.push(outgoingRequest._id);
     await driver.save();
-    console.log(newRequest._id);
 
     res.status(201).json({ message: "Request successful" });
   } catch (error) {
@@ -110,7 +105,7 @@ const requestDriver = async (req, res) => {
   }
 };
 
-module.exports = { joinDriver, requestDriver };
+module.exports = { findDrivers, requestDriver };
 
 /*
 destructure: date, time, destination, category

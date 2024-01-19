@@ -1,5 +1,6 @@
 const { default: mongoose } = require("mongoose");
 
+// referenced in the user model to track all the schedules of a user
 const scheduleSchema = new mongoose.Schema({
   category: {
     type: String,
