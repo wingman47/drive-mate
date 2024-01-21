@@ -36,9 +36,10 @@ const RiderForm = () => {
       console.log('formattedDateAndTime ', formattedDateAndTime);
       console.log(destination.location.lat, destination.location.lng);
       if (!selectedCategory || !formattedDateAndTime) {
-        Alert.alert('Please fill the fields');
+        Alert.alert('Press Again to Confirm !');
         return;
       }
+
       const response = await axios.post(`${ipconfig}/api/rider/finddrivers`, {
         destination: {
           type: 'Point',

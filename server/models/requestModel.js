@@ -14,7 +14,7 @@ const requestSchema = new Schema({
     required: true,
   },
   preferredDateTime: {
-    Type: String,
+    type: String,
   },
   category: {
     type: String,

@@ -32,7 +32,7 @@ const DriverForm = () => {
   const handleSubmit = async () => {
     try {
       if (!numberOfSeats || !selectedCategory || !formattedDateAndTime) {
-        Alert.alert('Please fill all the fields');
+        Alert.alert('Press Again To confirm !');
         return;
       }
       const savedDriver = await axios.post(
