@@ -24,19 +24,19 @@ Optimizes commuting patterns and reduces the number of individual vehicles on th
 
 ## Workflow of the App
 
-** User Registration **
+**User Registration**
 User A signs up on the Drive Mate app, indicating common destinations like schools or grocery stores.
 
-** Smart Matching **
+**Smart Matching**
 The app identifies User B, heading to the same destination, and suggests a match based on proximity and preferences.
 
-** Search in Radius **
+**Search in Radius**
 User C searches for potential co-travellers within a specified radius, expanding the possibilities for convenient rides.
 
-** Ride Request **
+**Ride Request**
 User A schedules a ride, receives driver options, and chooses User B or User C, who confirm the ride.
 
-** Fair Fare Sharing ** 
+**Fair Fare Sharing** 
 The app calculates fuel costs and transparently divides expenses between User A and User B or User C.
 
 ## Technology Stack
