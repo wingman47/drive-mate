@@ -86,6 +86,26 @@ const decreaseSeats = async (req, res) => {
 // Khatarnaak controller hai bhai (handles the thing which will be done when driver accepts the request).
 
 const acceptRequestFromRider = async (req, res) => {
+
+  /**
+   * driver -> accepts a request -> clear that request from incoming of driver
+  * -----------------------------------------------------------------------------------------
+  * now changes to do in rider user model -
+  * 1. go through all the outgoing request from rider user model with same date and time and clear incoming request for all those driver from the same user. to do this:
+  * from request schema find the queueDriverId and using that find the exact
+  * driver. now clear incoming request of this driver which has the same
+  * requestId
+  * 2. move outgoing request with requestId from scheduled schema for rider.
+  * 3. now, once done with all the drivers, clear outgoing request of rider with same date and time.
+  *
+  * ! TO DO:
+  * If a driver recieved 5 requests with only 4 seats then after accepting all the requests
+  * one rider will have an outgoing request for a driver which doesn't exists
+  * in the queue (since all seats got filled and driver is now removed from the queue).
+  * To handle this situation - perform cleanup of outgoing requests of a rider
+  * when they fetch their outgoing requests.
+  */
+ 
   try {
     const { queueDriverId, requestId, riderId } = req.body;
 
