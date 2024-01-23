@@ -183,10 +183,13 @@ const acceptRequestFromRider = async (req, res) => {
         if (matchingRequest) {
           const requestIndex = driver.incomingRequests.indexOf(matchingRequest);
       
-          // Remove the found request from incomingRequests
           if (requestIndex !== -1) {
+            // Remove the found request from incomingRequests
             driver.incomingRequests.splice(requestIndex, 1);
             await driver.save();
+
+            // Remove the found request from Request model
+            await Request.findByIdAndDelete(matchingRequest)
           } else {
             console.log("Request not found in driver's incomingRequests");
           }

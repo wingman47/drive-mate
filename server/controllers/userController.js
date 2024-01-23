@@ -155,9 +155,116 @@ const updateUserController = async (req, res) => {
   }
 };
 
+// Get schedules
+const getSchedules = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    const user = await userModel.findById(userId).populate("schedules");
+
+    if (!user) {
+      console.error("User not found");
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const populatedSchedules = user.schedules.map((schedule) =>
+      schedule.toObject()
+    );
+
+    const storedSchedulesArray = [...populatedSchedules];
+    res.status(200).send({
+      success: true,
+      data: storedSchedulesArray,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: "Error while fetching schedules",
+      error: error.message,
+    });
+  }
+};
+
+
+// get incoming requests 
+
+const getIncomingRequests = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = await userModel.findById(userId).populate("incomingRequests");
+
+    if (!user) {
+      console.error("User not found");
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const populatedIncomingRequests = user.incomingRequests.map((request) =>
+      request.toObject()
+    );
+
+    const storedIncomingRequestsArray = [...populatedIncomingRequests];
+
+    res.status(200).send({
+      success: true,
+      data: storedIncomingRequestsArray,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: "Error while fetching incoming requests",
+      error: error.message,
+    });
+  }
+};
+
+// get outgoing requests
+const getOutgoingRequests = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = await userModel.findById(userId).populate("outgoingRequests");
+
+    if (!user) {
+      console.error("User not found");
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const populatedOutgoingRequests = user.outgoingRequests.map((request) =>
+      request.toObject()
+    );
+
+    const storedOutgoingRequestsArray = [...populatedOutgoingRequests];
+    res.status(200).send({
+      success: true,
+      data: storedOutgoingRequestsArray,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: "Error while fetching outgoing requests",
+      error: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   requireSignIn,
   registerController,
   loginController,
   updateUserController,
+  getSchedules,
+  getIncomingRequests,
+  getOutgoingRequests,
 };
