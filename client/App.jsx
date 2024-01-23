@@ -18,6 +18,8 @@ import ProfileScreen from './screens/profile/ProfileScreen';
 import NoDriverScreen from './screens/rider/NoDirverScreen';
 import DriverCreatedConfirm from './screens/driver/DriverCreatedConfirm';
 import DriverOptionsScreen from './screens/rider/DriverOptionsScreen';
+import ConfirmationScreen from './screens/request/ConfirmationScreen';
+import RequestList from './screens/request/AcceptRequest';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -35,6 +37,8 @@ function Home() {
             iconName = focused ? 'calendar' : 'calendar-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'account' : 'account-outline';
+          } else if (route.name === 'Requests') {
+            iconName = focused ? 'arrow-collapse' : 'arrow-expand';
           }
 
           return (
@@ -46,6 +50,7 @@ function Home() {
       })}>
       <Tab.Screen name="Drive" component={HomeScreen} />
       <Tab.Screen name="Scheduled" component={ScheduledScreen} />
+      <Tab.Screen name="Requests" component={RequestList} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
@@ -64,6 +69,11 @@ function App() {
               <Stack.Screen
                 name="Home"
                 component={Home}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="ConfirmationScreen"
+                component={ConfirmationScreen}
                 options={{headerShown: false}}
               />
               <Stack.Screen
@@ -98,10 +108,10 @@ function App() {
               />
               {/* routing done after submition of the driver form  */}
               <Stack.Screen
-                  name="DriverCreated"
-                  component={DriverCreatedConfirm}
-                  options={{headerShown: false}}
-                  />
+                name="DriverCreated"
+                component={DriverCreatedConfirm}
+                options={{headerShown: false}}
+              />
               {/* routing done to handle submition of the Rider form */}
               <Stack.Screen
                 name="NoDriverScreen"
@@ -112,7 +122,7 @@ function App() {
                 name="DriverOptions"
                 component={DriverOptionsScreen}
                 options={{headerShown: false}}
-                />
+              />
             </Stack.Navigator>
           </KeyboardAvoidingView>
         </SafeAreaProvider>

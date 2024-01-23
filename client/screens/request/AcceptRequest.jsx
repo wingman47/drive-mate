@@ -32,7 +32,7 @@ const RequestItem = ({ item, onAccept, onReject }) => {
   );
 };
 
-const RequestList = () => {
+export const RequestList = () => {
   const [requests, setRequests] = useState(dummyData);
 
   const handleAccept = (requestId) => {

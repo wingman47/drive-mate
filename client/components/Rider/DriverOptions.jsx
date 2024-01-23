@@ -26,6 +26,8 @@ const renderDriverCards = drivers => {
     return (
       <DriverCard
         key={driver._id}
+        driverId={driver._id}
+        preferredDateTime={driver.preferredDateTime}
         name={driver.user.name}
         destination={newAdd}
         seats={driver.numberOfSeats}
