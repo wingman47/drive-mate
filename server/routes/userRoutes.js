@@ -23,13 +23,13 @@ router.post("/login", loginController);
 router.put("/update-user", requireSignIn, updateUserController);
 
 // Fetch schedules Route || GET
-router.get("/schedules", getSchedules);
+router.post("/schedules", getSchedules);
 
 // Get inoming requests Route || GET
-router.get("/incoming-req", getIncomingRequests);
+router.post("/incoming-req", getIncomingRequests);
 
 // Get inoming requests Route || GET
-router.get("/outgoing-req", getOutgoingRequests);
+router.post("/outgoing-req", getOutgoingRequests);
 
 //export
 module.exports = router;

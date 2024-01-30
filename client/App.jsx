@@ -19,7 +19,7 @@ import NoDriverScreen from './screens/rider/NoDirverScreen';
 import DriverCreatedConfirm from './screens/driver/DriverCreatedConfirm';
 import DriverOptionsScreen from './screens/rider/DriverOptionsScreen';
 import ConfirmationScreen from './screens/request/ConfirmationScreen';
-import RequestList from './screens/request/AcceptRequest';
+import RequestItem from './screens/request/RequestItem';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -50,7 +50,7 @@ function Home() {
       })}>
       <Tab.Screen name="Drive" component={HomeScreen} />
       <Tab.Screen name="Scheduled" component={ScheduledScreen} />
-      <Tab.Screen name="Requests" component={RequestList} />
+      <Tab.Screen name="Requests" component={RequestItem} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

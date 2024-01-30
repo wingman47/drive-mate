@@ -158,6 +158,7 @@ const updateUserController = async (req, res) => {
 // Get schedules
 const getSchedules = async (req, res) => {
   try {
+    console.log("schedules", req.body);
     const { userId } = req.body;
 
     const user = await userModel.findById(userId).populate("schedules");
@@ -189,8 +190,7 @@ const getSchedules = async (req, res) => {
   }
 };
 
-
-// get incoming requests 
+// get incoming requests
 
 const getIncomingRequests = async (req, res) => {
   try {
@@ -257,7 +257,6 @@ const getOutgoingRequests = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   requireSignIn,
