@@ -209,7 +209,17 @@ const getIncomingRequests = async (req, res) => {
       request.toObject()
     );
 
-    const storedIncomingRequestsArray = [...populatedIncomingRequests];
+    // Add the rider name to each object in the array
+    const storedIncomingRequestsArray = await Promise.all(
+      populatedIncomingRequests.map(async (request) => {
+        const riderUser = await userModel.findById(request.requestedByRider);
+        const riderName = riderUser ? riderUser.name : "Unknown Rider";
+        return {
+          ...request,
+          riderName,
+        };
+      })
+    );
 
     res.status(200).send({
       success: true,
@@ -224,6 +234,7 @@ const getIncomingRequests = async (req, res) => {
     });
   }
 };
+
 
 // get outgoing requests
 const getOutgoingRequests = async (req, res) => {
