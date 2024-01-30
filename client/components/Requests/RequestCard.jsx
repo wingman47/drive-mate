@@ -15,7 +15,7 @@ const RequestCard = ({
   riderId,
 }) => {
   const navigation = useNavigation();
-  const acceptRequest = async () => {
+  const acceptRequest = async () => { 
     try {
       const data = await axios.patch(`${ipconfig}/api/driver/acceptrequest`, {
         queueDriverId,
