@@ -21,7 +21,7 @@ const data= [
         image: newLink,
         screen: "EatsScreen", 
     }
-]
+] 
 
 const NavOptions = () => {
     const navigation = useNavigation();
