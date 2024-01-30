@@ -1,9 +1,35 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import React from 'react';
 import {capitalizeFirstLetter} from '../Scheduled/Schedule';
 import {Icon} from 'react-native-elements';
+import axios from 'axios';
+import ipconfig from '../../ipconfig';
+import {useNavigation} from '@react-navigation/native';
 
-const RequestCard = ({name, category, preferredDateTime}) => {
+const RequestCard = ({
+  name,
+  category,
+  preferredDateTime,
+  queueDriverId,
+  requestId,
+  riderId,
+}) => {
+  const navigation = useNavigation();
+  const acceptRequest = async () => {
+    try {
+      const data = await axios.patch(`${ipconfig}/api/driver/acceptrequest`, {
+        queueDriverId,
+        requestId,
+        riderId,
+      });
+      console.log('Data Recieved', data.data);
+      navigation.navigate('ConfirmationScreen');
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Request again');
+    }
+  };
+
   const seprated = preferredDateTime.split('T');
   const date = seprated[0];
   const time = seprated[1].slice(0, -8);
@@ -17,8 +43,7 @@ const RequestCard = ({name, category, preferredDateTime}) => {
       <View style={styles.buttonColumn}>
         <TouchableOpacity
           style={styles.acceptButton}
-          //   onPress={() => onAccept(id)}
-        >
+          onPress={() => acceptRequest()}>
           <Icon name="check" size={34} color="#ffffff" />
           <Text style={styles.iconLabel}>Accept</Text>
         </TouchableOpacity>

@@ -82,33 +82,31 @@ const decreaseSeats = async (req, res) => {
   }
 };
 
-
 // Khatarnaak controller hai bhai (handles the thing which will be done when driver accepts the request).
 
 const acceptRequestFromRider = async (req, res) => {
-
   /**
    * driver -> accepts a request -> clear that request from incoming of driver
-  * -----------------------------------------------------------------------------------------
-  * now changes to do in rider user model -
-  * 1. go through all the outgoing request from rider user model with same date and time and clear incoming request for all those driver from the same user. to do this:
-  * from request schema find the queueDriverId and using that find the exact
-  * driver. now clear incoming request of this driver which has the same
-  * requestId
-  * 2. move outgoing request with requestId from scheduled schema for rider.
-  * 3. now, once done with all the drivers, clear outgoing request of rider with same date and time.
-  *
-  * ! TO DO:
-  * If a driver recieved 5 requests with only 4 seats then after accepting all the requests
-  * one rider will have an outgoing request for a driver which doesn't exists
-  * in the queue (since all seats got filled and driver is now removed from the queue).
-  * To handle this situation - perform cleanup of outgoing requests of a rider
-  * when they fetch their outgoing requests.
-  */
- 
-  try {
-    const { queueDriverId, requestId, riderId } = req.body;
+   * -----------------------------------------------------------------------------------------
+   * now changes to do in rider user model -
+   * 1. go through all the outgoing request from rider user model with same date and time and clear incoming request for all those driver from the same user. to do this:
+   * from request schema find the queueDriverId and using that find the exact
+   * driver. now clear incoming request of this driver which has the same
+   * requestId
+   * 2. move outgoing request with requestId from scheduled schema for rider.
+   * 3. now, once done with all the drivers, clear outgoing request of rider with same date and time.
+   *
+   * ! TO DO:
+   * If a driver recieved 5 requests with only 4 seats then after accepting all the requests
+   * one rider will have an outgoing request for a driver which doesn't exists
+   * in the queue (since all seats got filled and driver is now removed from the queue).
+   * To handle this situation - perform cleanup of outgoing requests of a rider
+   * when they fetch their outgoing requests.
+   */
 
+  try {
+    console.log(req.body);
+    const { queueDriverId, requestId, riderId } = req.body;
     // Input validation
     if (!queueDriverId || !requestId || !riderId) {
       return res.status(400).json({ error: "Missing required parameters" });
@@ -116,8 +114,8 @@ const acceptRequestFromRider = async (req, res) => {
 
     // Fetch rider and populate outgoingRequests
     const rider = await userModel.findById(riderId).populate({
-      path: 'outgoingRequests',
-      model: 'Request',
+      path: "outgoingRequests",
+      model: "Request",
     });
 
     if (!rider) {
@@ -139,7 +137,9 @@ const acceptRequestFromRider = async (req, res) => {
     }
 
     // Decrease seat count for the driver
-    await Driver.findByIdAndUpdate(queueDriverId, { $inc: { numberOfSeats: -1 } });
+    await Driver.findByIdAndUpdate(queueDriverId, {
+      $inc: { numberOfSeats: -1 },
+    });
 
     // Remove incoming request from driver
     const driverId = queueDriver.user;
@@ -158,7 +158,9 @@ const acceptRequestFromRider = async (req, res) => {
       return request.preferredDateTime === preferredDateTime;
     });
 
-    const driversWithRequests = matchingRequests.map((request) => request.queueDriverId);
+    const driversWithRequests = matchingRequests.map(
+      (request) => request.queueDriverId
+    );
 
     const usersWithIncomingReq = await Promise.all(
       driversWithRequests.map(async (driverId) => {
@@ -167,40 +169,43 @@ const acceptRequestFromRider = async (req, res) => {
       })
     );
 
-
     // Remove incoming requests from users
-    await Promise.all(usersWithIncomingReq.map(async (userId) => {
-      try {
-        const driver = await userModel.findById(userId);
-      
-        // Find the matching request in the user's incomingRequests
-        const matchingRequest = driver.incomingRequests.find((request) =>
-          matchingRequests.some((matchingRequest) =>
-            matchingRequest.equals(request)  // Check if the request ID is in matchingRequests
-          )
-        );
-      
-        if (matchingRequest) {
-          const requestIndex = driver.incomingRequests.indexOf(matchingRequest);
-      
-          if (requestIndex !== -1) {
-            // Remove the found request from incomingRequests
-            driver.incomingRequests.splice(requestIndex, 1);
-            await driver.save();
+    await Promise.all(
+      usersWithIncomingReq.map(async (userId) => {
+        try {
+          const driver = await userModel.findById(userId);
 
-            // Remove the found request from Request model
-            await Request.findByIdAndDelete(matchingRequest)
+          // Find the matching request in the user's incomingRequests
+          const matchingRequest = driver.incomingRequests.find((request) =>
+            matchingRequests.some(
+              (matchingRequest) => matchingRequest.equals(request) // Check if the request ID is in matchingRequests
+            )
+          );
+
+          if (matchingRequest) {
+            const requestIndex =
+              driver.incomingRequests.indexOf(matchingRequest);
+
+            if (requestIndex !== -1) {
+              // Remove the found request from incomingRequests
+              driver.incomingRequests.splice(requestIndex, 1);
+              await driver.save();
+
+              // Remove the found request from Request model
+              await Request.findByIdAndDelete(matchingRequest);
+            } else {
+              console.log("Request not found in driver's incomingRequests");
+            }
           } else {
-            console.log("Request not found in driver's incomingRequests");
+            console.log(
+              "Matching request not found in driver's incomingRequests"
+            );
           }
-        } else {
-          console.log("Matching request not found in driver's incomingRequests");
+        } catch (error) {
+          console.error(`Error processing user with ID ${userId}:`, error);
         }
-      } catch (error) {
-        console.error(`Error processing user with ID ${userId}:`, error);
-      }
-    }));
-        
+      })
+    );
 
     // Create a new schedule for the rider
     const newSchedule = await new scheduleModel({
@@ -247,7 +252,6 @@ module.exports = {
   decreaseSeats,
   acceptRequestFromRider,
 };
-
 
 // For accepting requests.
 // {

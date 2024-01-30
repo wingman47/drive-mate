@@ -38,9 +38,12 @@ export const RequestItem = () => {
         requests.map(request => {
           return (
             <RequestCard
-              name="Hard Coded"
+              name={request.riderName}
               category={request.category}
               preferredDateTime={request.preferredDateTime}
+              queueDriverId={request.queueDriverId}
+              requestId={request._id}
+              riderId={request.requestedByRider}
             />
           );
         })}
