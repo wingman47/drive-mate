@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Alert, Image, Text, useColorScheme, View} from 'react-native';
+import {ActivityIndicator, Alert, Image, Text, useColorScheme, View} from 'react-native';
 import tw from 'twrnc';
 import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import InputBox from '../../components/Form/InputBox';
@@ -19,33 +19,33 @@ const Login = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const navigation = useNavigation();
+
   const handleSubmit = async () => {
     try {
       setLoading(true);
+  
       if (!email || !password) {
-        setLoading(false);
         Alert.alert('Please fill the fields');
         return;
       }
-      setLoading(false);
       const response = await axios.post(
         `${ipconfig}/api/v1/auth/login`,
-        {email, password},
+        { email, password },
       );
-      console.log("response: ", response.data.user);
+
       dispatch(
         setLogin({
           user: response.data.user,
         }),
       );
-      console.log('user logged ', user);
-      // Alert.alert(user && user.message);
-    } catch (error) {
-      Alert.alert(error);
       setLoading(false);
+      console.log('user logged ', user);
+    } catch (error) {
+      Alert.alert(error.message);
+      setLoading(false); // Set loading to false in case of an error
       console.log(error);
     }
-  };
+};
 
   // Redirection to the New page.
   useEffect(() => {
@@ -57,7 +57,12 @@ const Login = () => {
 
   return (
     <View style={tw`flex-1`}>
-      {/* <Header /> */}
+      {
+      loading ?<View style={{flex: 1,
+        justifyContent: 'center'}}>
+      <ActivityIndicator size="large" color="#00008b" />
+    </View> : 
+      <View>
       <Image
         source={{
           uri: 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?q=80&w=448&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -86,7 +91,6 @@ const Login = () => {
           <SubmitButton
             btnTitle={'Login'}
             handleSubmit={handleSubmit}
-            loading={loading}
           />
           <View style={tw`mx-auto`}>
             <Text onPress={() => navigation.navigate('Register')}>
@@ -96,6 +100,8 @@ const Login = () => {
           </View>
         </View>
       </View>
+    </View>
+    }
     </View>
   );
 };

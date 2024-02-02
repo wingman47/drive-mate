@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Alert, Image, Text, useColorScheme, View} from 'react-native';
+import {ActivityIndicator, Alert, Image, Text, useColorScheme, View} from 'react-native';
 import tw from 'twrnc';
 import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 import InputBox from '../../components/Form/InputBox';
@@ -17,36 +17,45 @@ const Register = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+
   const handleSubmit = async () => {
-    try {
-      setLoading(true);
-      if (!name || !email || !password) {
-        setLoading(false);
-        Alert.alert('Please fill the fields');
-        return;
-      }
-      setLoading(false);
-      const user = await axios.post(`${ipconfig}/api/v1/auth/register`, {
-        name,
-        email,
-        password,
-      });
-      // console.log(user.data.user);
-      dispatch(
-        setLogin({
-          user: user.data.user,
-        }),
-      );
-      // Alert.alert(user && user.message);
-    } catch (error) {
-      Alert.alert('Error occurred: ' + error.message);
-      setLoading(false);
-      console.log(error);
+  try {
+    setLoading(true);
+
+    if (!name || !email || !password) {
+      Alert.alert('Please fill the fields');
+      return;
     }
-  };
+
+    const response = await axios.post(`${ipconfig}/api/v1/auth/register`, {
+      name,
+      email,
+      password,
+    });
+
+    dispatch(
+      setLogin({
+        user: response.data.user,
+      }),
+    );
+
+    // Alert.alert(response && response.message);
+  } catch (error) {
+    Alert.alert('Error occurred: ' + error.message);
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
+};
+
   return (
-    <KeyboardAwareScrollView>
-      <View>
+    // <KeyboardAwareScrollView>
+      <View style={tw`flex-1`}>
+        {
+          loading ?<View style={{flex: 1,
+            justifyContent: 'center'}}>
+          <ActivityIndicator size="large" color="#00008b" />
+        </View> : <View>
         <Header />
         {/* <Image
         source={{
@@ -92,8 +101,10 @@ const Register = ({navigation}) => {
             </View>
           </View>
         </View>
+        </View>
+        }
       </View>
-    </KeyboardAwareScrollView>
+    // </KeyboardAwareScrollView>
   );
 };
 

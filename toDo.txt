@@ -1,0 +1,15 @@
+1. Reject request controller and connect it.
+
+2. after accpeting the request from the user schedule is begin saved as panding
+
+3.after accpepting request/making the request/making the drive show the ralavent information
+
+4.add loading screens
+
+5.make a loader for an api call
+
+6.make logout
+
+7.Improve login/sigup ui/ error hendling
+
+8.after the login user should not come back to login in the same session
