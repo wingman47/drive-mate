@@ -213,6 +213,7 @@ const acceptRequestFromRider = async (req, res) => {
       destination,
       category,
       preferredDateTime,
+      status: "confirmed",
     }).save();
 
     rider.schedules.push(newSchedule._id);
