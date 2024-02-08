@@ -22,7 +22,7 @@ const data= [
         id: "456",
         title: "Plan Trip",
         image: tripPlanner,
-        screen: "EatsScreen", 
+        screen: "Launchingsoon", 
     }
 ] 
 

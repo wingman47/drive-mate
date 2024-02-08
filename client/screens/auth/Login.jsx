@@ -83,7 +83,7 @@ const Login = () => {
                   Login Here
                 </Text>
                 <Text style={tw`text-xl font-semibold text-center text-black my-4 `}>
-                  Welcode back we missed you!
+                  Welcome back we missed you!
                 </Text>
               </View>
               <InputBox

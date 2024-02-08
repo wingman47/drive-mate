@@ -20,6 +20,7 @@ import DriverCreatedConfirm from './screens/driver/DriverCreatedConfirm';
 import DriverOptionsScreen from './screens/rider/DriverOptionsScreen';
 import ConfirmationScreen from './screens/request/ConfirmationScreen';
 import RequestItem from './screens/request/RequestItem';
+import LaunchingSoon from './screens/tripplanner/LaunchingSoon';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -97,6 +98,11 @@ function App() {
                 options={{headerShown: false}}
               />
               <Stack.Screen
+                name="Launchingsoon"
+                component={LaunchingSoon}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
                 name="DriverForm"
                 component={DriverForm}
                 options={{headerShown: false}}
@@ -106,13 +112,11 @@ function App() {
                 component={RiderForm}
                 options={{headerShown: false}}
               />
-              {/* routing done after submition of the driver form  */}
               <Stack.Screen
                 name="DriverCreated"
                 component={DriverCreatedConfirm}
                 options={{headerShown: false}}
               />
-              {/* routing done to handle submition of the Rider form */}
               <Stack.Screen
                 name="NoDriverScreen"
                 component={NoDriverScreen}
