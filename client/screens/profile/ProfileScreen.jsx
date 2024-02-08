@@ -10,6 +10,7 @@ import {
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../slice/authSlice';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+const avatar = require('../../assets/avatar.png');
 
 const ProfileScreen = () => {
   const user = useSelector(selectUser);
@@ -18,7 +19,7 @@ const ProfileScreen = () => {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={{ uri: 'https://placekitten.com/300/300' }}
+          source={avatar}
           style={styles.profileImage}
         />
         <Text style={styles.username}>{user.name}</Text>
@@ -47,37 +48,43 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#fafafa',
+    backgroundColor: '#0F1035',
   },
   header: {
     alignItems: 'center',
-    padding: 40,
-    backgroundColor: '#2196f3',
+    padding: 50,
+    backgroundColor: '#0F1035',
   },
   profileImage: {
     width: 150,
     height: 150,
     borderRadius: 75,
-    borderWidth: 4,
+    borderWidth: 3,
     borderColor: '#fff',
   },
   username: {
     marginTop: 20,
     fontSize: 28,
     fontWeight: 'bold',
+    fontFamily: 'monospace',
     color: '#fff',
   },
   infoContainer: {
-    padding: 30,
-    // backgroundColor: '#f0f0f0'
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    // borderRadius: 30,
+    height: 400,
+    // marginVertical: 20,
+    padding: 44,
+    backgroundColor: '#F5F7F8'
   },
   infoItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 20,
   },
   infoText: {
-    marginLeft: 15,
+    marginLeft: 20,
     fontSize: 18,
     color: '#333',
   },

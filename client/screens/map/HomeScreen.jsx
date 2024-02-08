@@ -14,6 +14,7 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 import {useDispatch} from 'react-redux';
 import {setDestination, setOrigin} from '../../slice/navSlice';
 import NavFavourites from '../../components/Map/NavFavourites';
+const logo = require('../../assets/minimal.png');
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
@@ -28,9 +29,7 @@ const HomeScreen = () => {
               height: 100,
               resizeMode: 'contain',
             }}
-            source={{
-              uri: 'https://static.thenounproject.com/png/5356141-200.png',
-            }}
+            source={logo}
           />
           <Text style={tw`text-black text-xl font-bold m-2`}>Drive Mate</Text>
           <GooglePlacesAutocomplete

@@ -48,7 +48,7 @@ function Home() {
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
       })}>
-      <Tab.Screen name="Drive" component={HomeScreen} />
+      <Tab.Screen name="Drive" component={HomeScreen} options={{headerShown: false}}/>
       <Tab.Screen name="Scheduled" component={ScheduledScreen} />
       <Tab.Screen name="Requests" component={RequestItem} />
       <Tab.Screen name="Profile" component={ProfileScreen} />

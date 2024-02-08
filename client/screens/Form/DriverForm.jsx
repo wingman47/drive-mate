@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, ActivityIndicator } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import { Icon } from '@rneui/themed';
@@ -22,6 +22,7 @@ const DriverForm = () => {
   const [formattedDateAndTime, setFormattedDateAndTime] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [numberOfSeats, setNumberOfSeats] = useState('');
+  const [loading, setLoading] = useState(false); 
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const origin = useSelector(selectOrigin);
@@ -31,8 +32,11 @@ const DriverForm = () => {
 
   const handleSubmit = async () => {
     try {
+      setLoading(true); 
+
       if (!numberOfSeats || !selectedCategory || !formattedDateAndTime) {
         Alert.alert('Press Again To confirm !');
+        setLoading(false);
         return;
       }
       const savedDriver = await axios.post(
@@ -54,20 +58,18 @@ const DriverForm = () => {
           destinationAddress: destination.description,
         },
       );
-      const {data} = savedDriver;
+      const { data } = savedDriver;
       if (data.user) {
-        // Alert.alert('Sucessfully Created the request');
-        setTimeout(() => {
-          navigation.navigate('DriverCreated');
-        }, 300);
-      }else
-      {
+          console.log("Coming data: ",data);
+          setLoading(false);
+          navigation.navigate('DriverCreated', {destination: data.destinationAddress, seats: data.numberOfSeats,dateTime: data.preferredDateTime});
+      } else {
+        setLoading(false);
         Alert.alert('Enter form again');
       }
-      console.log(data);
-      // dispatch();
     } catch (error) {
       console.log(error);
+      setLoading(false); 
     }
   };
 
@@ -123,73 +125,81 @@ const DriverForm = () => {
 
   return (
     <KeyboardAwareScrollView>
-      <View style={[styles.container, tw`m-4 mt-16 rounded-lg bg-white`]}>
-        <Text style={tw`text-blue-600 font-bold text-center my-4 text-4xl`}>
-          Create a Ride
-        </Text>
-        <Text style={styles.label}>Number of Seats</Text>
-        <TextInput
-          style={styles.inputContainer}
-          value={numberOfSeats}
-          onChangeText={text => setNumberOfSeats(text.replace(/[^0-9]/g, ''))}
-          keyboardType="numeric"
-        />
+    <View style={tw`flex-1`}>
+    {loading ? (
+    <View style={tw`flex-1 justify-center`}>
+      <ActivityIndicator size="large" color="#00008b" />
+    </View>
+  ) : (
+    <View style={[styles.container, tw`m-4 mt-16 rounded-lg bg-white`]}>
+      <Text style={tw`text-blue-600 font-bold text-center my-4 text-4xl`}>
+        Create a Drive
+      </Text>
+      <Text style={styles.label}>Number of Seats</Text>
+      <TextInput
+        style={styles.inputContainer}
+        value={numberOfSeats}
+        onChangeText={text => setNumberOfSeats(text.replace(/[^0-9]/g, ''))}
+        keyboardType="numeric"
+      />
 
-        <Text style={styles.label}>Date</Text>
-        <TouchableOpacity
-          style={styles.inputContainer}
-          onPress={showDatePicker}>
-          <Icon
-            style={tw`p-2 bg-blue-600 rounded-full w-10`}
-            name="calendar"
-            color="white"
-            type="antdesign"
-          />
-          <Text style={styles.inputText}>{date || 'Select Date'}</Text>
-        </TouchableOpacity>
-        <DateTimePickerModal
-          isVisible={isDatePickerVisible}
-          mode="date"
-          onConfirm={handleDateConfirm}
-          onCancel={hideDatePicker}
+      <Text style={styles.label}>Date</Text>
+      <TouchableOpacity
+        style={styles.inputContainer}
+        onPress={showDatePicker}>
+        <Icon
+          style={tw`p-2 bg-blue-600 rounded-full w-10`}
+          name="calendar"
+          color="white"
+          type="antdesign"
         />
+        <Text style={styles.inputText}>{date || 'Select Date'}</Text>
+      </TouchableOpacity>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleDateConfirm}
+        onCancel={hideDatePicker}
+      />
 
-        <Text style={styles.label}>Time</Text>
-        <TouchableOpacity
-          style={styles.inputContainer}
-          onPress={showTimePicker}>
-          <Time
-            style={tw`p-2 bg-blue-600 rounded-full`}
-            name="clockcircleo"
-            color="white"
-            size={24}
-            type="antdesign"
-          />
-          <Text style={styles.inputText}>{time || 'Select Time'}</Text>
-        </TouchableOpacity>
-        <DateTimePickerModal
-          isVisible={isTimePickerVisible}
-          mode="time"
-          onConfirm={handleTimeConfirm}
-          onCancel={hideTimePicker}
+      <Text style={styles.label}>Time</Text>
+      <TouchableOpacity
+        style={styles.inputContainer}
+        onPress={showTimePicker}>
+        <Time
+          style={tw`p-2 bg-blue-600 rounded-full`}
+          name="clockcircleo"
+          color="white"
+          size={24}
+          type="antdesign"
         />
-        <Text style={styles.label}>Category</Text>
-        <RNPickerSelect
-          items={categories}
-          onValueChange={handleCategoryChange}
-          value={selectedCategory}
-          placeholder={{ label: 'Select a category', value: null }}
-        />
+        <Text style={styles.inputText}>{time || 'Select Time'}</Text>
+      </TouchableOpacity>
+      <DateTimePickerModal
+        isVisible={isTimePickerVisible}
+        mode="time"
+        onConfirm={handleTimeConfirm}
+        onCancel={hideTimePicker}
+      />
+      <Text style={styles.label}>Category</Text>
+      <RNPickerSelect
+        items={categories}
+        onValueChange={handleCategoryChange}
+        value={selectedCategory}
+        placeholder={{ label: 'Select a category', value: null }}
+      />
 
-        <TouchableOpacity
-          style={[styles.button, tw`bg-blue-600 font-bold py-4`]}
-          onPress={async () => {
-            await handleTimeAndDateConfirm(time, date);
-            handleSubmit();
-          }}>
-          <Text style={[styles.buttonText, tw`font-bold text-xl`]}>Submit</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        style={[styles.button, tw`bg-blue-600 font-bold py-4`]}
+        onPress={async () => {
+          await handleTimeAndDateConfirm(time, date);
+          handleSubmit();
+        }}>
+        <Text style={[styles.buttonText, tw`font-bold text-xl`]}>Submit</Text>
+      </TouchableOpacity>
+    </View>
+  )}
+</View>
     </KeyboardAwareScrollView>
   );
 };

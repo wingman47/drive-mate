@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import {capitalizeFirstLetter} from '../Scheduled/Schedule';
 import {Icon} from 'react-native-elements';
 import axios from 'axios';
@@ -15,7 +15,9 @@ const RequestCard = ({
   riderId,
 }) => {
   const navigation = useNavigation();
-  const acceptRequest = async () => { 
+  const [loading,setLoading] = useState(false);
+
+  const acceptRequest = async () => {
     try {
       const data = await axios.patch(`${ipconfig}/api/driver/acceptrequest`, {
         queueDriverId,
@@ -23,7 +25,7 @@ const RequestCard = ({
         riderId,
       });
       console.log('Data Recieved', data.data);
-      navigation.navigate('ConfirmationScreen');
+      navigation.navigate('ConfirmationScreen',{heading: 'Request Accepted', msg: 'Enjoy your journey with your drive mate'});
     } catch (error) {
       console.error(error);
       Alert.alert('Request again');

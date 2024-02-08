@@ -20,7 +20,7 @@ const Map = () => {
       mapRef.current.fitToSuppliedMarkers(['origin', 'destination'], {
         edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
       });
-    }, 1000); // Adjust the delay as needed
+    }, 1000);
 
     return () => clearTimeout(timeoutId);
   }, [origin, destination]);
@@ -63,7 +63,7 @@ const Map = () => {
             destination={destination.description}
             apikey={GOOGLE_MAPS_APIkEY}
             strokeWidth={3}
-            strokeColor="red"
+            strokeColor="blue"
           />
         )
       }

@@ -1,15 +1,36 @@
+---ToDOs---
+
 1. Reject request controller and connect it. 
 
-2.after accpeting the request from the user schedule is begin saved as panding (completed)
+2. Make logout
 
-3.after accpepting request/making the request/making the drive show the ralavent information
+3. After the login user should not come back to login in the same session
 
-4.add loading screens
+4. After accpeting the request from the user schedule is begin saved as panding (completed)
 
-5.make a loader for an api call (completed)
+5. After accpepting request/making the request/making the drive show the ralavent information (completed)
 
-6.make logout
+6. Make a loader for an api call (completed)
+Have to apply loading in 2 calls
+1-> sending request to driver
+2-> accpepting request of rider
 
-7.Improve login/sigup ui/ error hendling
+7. Improve login/sigup ui/ error hendling (completed but should be Improved more) (ui is improvement done / error messages are not ralavent)
 
-8.after the login user should not come back to login in the same session
+8. Outgoing / Incoming request screens in request (toggle) #controller are written.
+
+9. Add contact information of both the driver and rider.
+
+10. Search in radius.
+
+11. In Joining driver and rider (take a time interval insted of a Instantanious time) & (If both catagory and date time are matching we are getting a repeated data in the Driver Options).
+
+---COMPLEX TOTOS--
+
+1. Nofification
+
+2. Calender Intigration
+
+3. Live Tracking
+
+4. Fare Split / Payment gateway.

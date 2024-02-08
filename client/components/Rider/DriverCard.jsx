@@ -30,9 +30,7 @@ const DriverCard = ({name, destination, seats, date, time, category, driverId,pr
       })
       if(response)
       {
-        setTimeout(() => {
-          navigation.navigate('ConfirmationScreen');
-        }, 300);
+          navigation.navigate('ConfirmationScreen',{heading: 'Request Send', msg: 'Waiting for the driver to accept'});
       }
     } catch (error) {
       console.log(error)

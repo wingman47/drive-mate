@@ -13,110 +13,115 @@ const requireSignIn = jwt({
 const registerController = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    console.log(name);
-    //validation
+    
+    // Validation
     if (!name) {
       return res.status(400).send({
         success: false,
-        message: "name is required",
+        message: "Name is required",
       });
     }
     if (!email) {
       return res.status(400).send({
         success: false,
-        message: "email is required",
+        message: "Email is required",
       });
     }
     if (!password || password.length < 6) {
       return res.status(400).send({
         success: false,
-        message: "password is required and 6 character long",
+        message: "Password is required and must be at least 6 characters long",
       });
     }
-    //exisiting user
-    const exisitingUser = await userModel.findOne({ email });
-    if (exisitingUser) {
-      return res.status(500).send({
+    
+    // Check if user already exists
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
+      return res.status(409).send({
         success: false,
-        message: "User Already Register With This Email",
+        message: "User already registered with this email",
       });
     }
-    //hashed pasword
+    
+    // Hash the password
     const hashedPassword = await hashPassword(password);
 
-    //save user
+    // Save user
     const user = await userModel({
       name,
       email,
       password: hashedPassword,
     }).save();
-    console.log("created user", user);
+
+    console.log("Created user:", user);
+    
     return res.status(201).send({
       success: true,
-      message: "Registeration Successful please login",
+      message: "Registration successful. Please login.",
       user: user,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error in register API:", error);
     return res.status(500).send({
       success: false,
-      message: "Error in Register API",
-      error,
+      message: "Internal server error. Please try again later.",
     });
   }
 };
 
-//login
+
 const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
-    //validation
+    
+    // Validation
     if (!email || !password) {
-      return res.status(500).send({
+      return res.status(400).send({
         success: false,
-        message: "Please Provide Email Or Password",
+        message: "Please provide both email and password",
       });
     }
-    // find user
+
+    // Find user
     const user = await userModel.findOne({ email });
     if (!user) {
-      return res.status(500).send({
+      return res.status(404).send({
         success: false,
-        message: "User Not Found",
+        message: "User with provided email not found",
       });
     }
-    //match password
+
+    // Match password
     const match = await comparePassword(password, user.password);
     if (!match) {
-      return res.status(500).send({
+      return res.status(401).send({
         success: false,
-        message: "Invalid usrname or password",
+        message: "Incorrect password. Please try again",
       });
     }
-    //TOKEN JWT
+
+    // Generate JWT token
     const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
-
-    // undeinfed password
+    // Remove password from user object before sending the response
     delete user.password;
+    // Send success response with token and user details
     res.status(200).send({
       success: true,
-      message: "login successfully",
+      message: "Login successful",
       token,
       user,
     });
   } catch (error) {
-    console.log(error);
-    return res.status(500).send({
+    console.error("Error in login API:", error);
+    res.status(500).send({
       success: false,
-      message: "error in login api",
-      error,
+      message: "Internal server error. Please try again later",
     });
   }
 };
 
-//update user
 const updateUserController = async (req, res) => {
   try {
     const { name, password, email } = req.body;
@@ -209,7 +214,6 @@ const getIncomingRequests = async (req, res) => {
       request.toObject()
     );
 
-    // Add the rider name to each object in the array
     const storedIncomingRequestsArray = await Promise.all(
       populatedIncomingRequests.map(async (request) => {
         const riderUser = await userModel.findById(request.requestedByRider);

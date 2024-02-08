@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import {Icon} from '@rneui/themed';
@@ -27,19 +27,23 @@ const RiderForm = () => {
   const [time, setTime] = useState('');
   const [formattedDateAndTime, setFormattedDateAndTime] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-
+  const [loading, setLoading] = useState(false); 
   const navigation = useNavigation();
   const destination = useSelector(selectDestination);
   const dispatch = useDispatch();
+
   const handleSubmit = async () => {
     try {
+      setLoading(true);
+  
       console.log('formattedDateAndTime ', formattedDateAndTime);
       console.log(destination.location.lat, destination.location.lng);
       if (!selectedCategory || !formattedDateAndTime) {
         Alert.alert('Press Again to Confirm !');
+        setLoading(false);
         return;
       }
-
+  
       const response = await axios.post(`${ipconfig}/api/rider/finddrivers`, {
         destination: {
           type: 'Point',
@@ -48,19 +52,22 @@ const RiderForm = () => {
         category: selectedCategory,
         preferredDateTime: formattedDateAndTime,
       });
-      const {data} = response;
-      console.log('response recieved ', data.data.matchesDestination);
+      const { data } = response;
+      console.log('response received ', data.data.matchesDestination);
       if (data.status === 'success') {
         dispatch(setSameDestination(data.data.matchesDestination));
         dispatch(setSameCategory(data.data.matchesCategory));
         navigation.navigate('DriverOptions');
       } else {
         console.log('No matching drivers found.');
-        navigation.navigate('NoDriverScreen')
+        navigation.navigate('NoDriverScreen');
       }
+  
+      setLoading(false); // Stop loading
       // ! TODO: radius
     } catch (error) {
       console.log(error);
+      setLoading(false); // Stop loading
     }
   };
 
@@ -119,9 +126,15 @@ const RiderForm = () => {
 
   return (
     <KeyboardAwareScrollView>
+      <View style={tw`flex-1`}>
+        {loading ? (
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <ActivityIndicator size="large" color="#00008b" />
+          </View>
+        ) :
       <View style={[styles.container, tw`m-4 my-32 rounded-lg bg-white`]}>
         <Text style={tw`text-green-600 font-bold text-center my-4 text-4xl`}>
-          Create a Ride
+          Find a Ride
         </Text>
         <Text style={styles.label}>Date</Text>
         <TouchableOpacity
@@ -177,6 +190,8 @@ const RiderForm = () => {
           }}>
           <Text style={[styles.buttonText, tw`font-bold text-xl`]}>Submit</Text>
         </TouchableOpacity>
+      </View>
+      }
       </View>
     </KeyboardAwareScrollView>
   );

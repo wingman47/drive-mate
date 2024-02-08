@@ -9,6 +9,7 @@ const InputBox= ({
   secureTextEntry = false,
   value,
   setValue,
+  icon
 }) => {
   return (
     <View>
