@@ -3,7 +3,74 @@ const RequestModel = require("../models/requestModel");
 const scheduleModel = require("../models/scheduleModel");
 const userModel = require("../models/userModel");
 
-// finds the driver based on 3 conditions: destination, category, preferredDateTime
+// find driver at same destination && in time range.
+
+const findDriversInTimeRange = async (req, res) => {
+  const { destination, category, preferredDateTime } = req.body;
+  const currentDate = new Date(preferredDateTime + "Z");
+  const futureDate = new Date(currentDate.getTime() + 10 * 60 * 1000); // 10 minutes ahead
+  const pastDate = new Date(currentDate.getTime() - 10 * 60 * 1000); // 10 minutes behind
+  try {
+    const drivers = await Driver.find({
+      $and: [
+        {
+          preferredDateTime: {
+            $gte: pastDate,
+            $lte: futureDate,
+          }
+        },
+        {
+          "destination.coordinates": {
+            $geoWithin: {
+              $centerSphere: [destination.coordinates, 10 / 6371] // 10 km radius
+            }
+          }
+        }
+      ]
+    });
+    console.log(drivers);
+    res.status(200).json({ success: true, data: drivers });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: "Server Error" });
+    console.error("Error finding drivers within range and destination:", error.message);
+  }
+}
+
+// Find in radius.
+const findInRadius = async (req, res) => {
+  const { destination, category, preferredDateTime } = req.body;
+  const currentDate = new Date(preferredDateTime + "Z");
+  const futureDate = new Date(currentDate.getTime() + 10 * 60 * 1000); // 10 minutes ahead
+  const pastDate = new Date(currentDate.getTime() - 10 * 60 * 1000); // 10 minutes behind
+  try {
+    const drivers = await Driver.find({
+      $and: [
+        {
+          preferredDateTime: {
+            $gte: pastDate,
+            $lte: futureDate,
+          }
+        },
+        {
+          "destination.coordinates": {
+            $geoWithin: {
+              $centerSphere: [destination.coordinates, 10 / 6371] // 10 km radius
+            }
+          }
+        }
+      ]
+    });
+    console.log(drivers);
+    res.status(200).json({ success: true, data: drivers });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: "Server Error" });
+    console.error("Error finding drivers within range and destination:", error.message);
+  }
+}
+
+
+// find driver 
+
 const findDrivers = async (req, res) => {
   try {
     const { destination, category, preferredDateTime } = req.body;
@@ -12,13 +79,13 @@ const findDrivers = async (req, res) => {
     const destinationMatches = await Driver.find({
       destination,
       preferredDateTime,
-    }).populate("user"); // 'user' is the reference to the user model in the Driver model
+    }).populate("user");
 
     // Find drivers matching category, date, and time
     const categoryMatches = await Driver.find({
       category,
       preferredDateTime,
-    }).populate("user"); // 'user' is the reference to the user model in the Driver model
+    }).populate("user");
 
     // Prepare response with labels and spread user information
     if (destinationMatches.length > 0 || categoryMatches.length > 0) {
