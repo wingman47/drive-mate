@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -12,12 +12,13 @@ import {
 import tw from 'twrnc';
 import InputBox from '../../components/Form/InputBox';
 import SubmitButton from '../../components/Form/SubmitButton';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectUser, setLogin } from '../../slice/authSlice';
-import { useNavigation } from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectUser, setLogin} from '../../slice/authSlice';
+import {useNavigation} from '@react-navigation/native';
 import ipconfig from '../../ipconfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const sportCar = require('../../assets/sport-car.png');
 
@@ -36,7 +37,7 @@ const Login = () => {
 
       if (!email || !password) {
         Alert.alert('Please fill the fields');
-        setLoading(false)
+        setLoading(false);
         return;
       }
       const response = await axios.post(`${ipconfig}/api/v1/auth/login`, {
@@ -47,8 +48,9 @@ const Login = () => {
       dispatch(
         setLogin({
           user: response.data.user,
-        })
+        }),
       );
+      AsyncStorage.setItem('userInfo', JSON.stringify(response.data.user));
       setLoading(false);
       console.log('user logged ', user);
     } catch (error) {
@@ -65,14 +67,39 @@ const Login = () => {
     navigation.navigate('Home');
   }, [user]);
 
+  const isLoggedIn = async () => {
+    try {
+      setLoading(true);
+      const getInfo = await AsyncStorage.getItem('userInfo');
+      const userInfo = JSON.parse(getInfo);
+
+      if (userInfo) {
+        dispatch(
+          setLogin({
+            user: userInfo,
+          }),
+        );
+        console.log('###################################', userInfo);
+      }
+
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      console.log(`is logged in error ${e}`);
+    }
+  };
+
+  useEffect(() => {
+    isLoggedIn();
+  }, []);
+
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+      style={{flex: 1}}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={tw`flex-1`}>
         {loading ? (
-          <View style={{ flex: 1, justifyContent: 'center' }}>
+          <View style={{flex: 1, justifyContent: 'center'}}>
             <ActivityIndicator size="large" color="#00008b" />
           </View>
         ) : (
@@ -82,7 +109,8 @@ const Login = () => {
                 <Text style={tw`text-3xl font-bold text-center text-blue-700`}>
                   Login Here
                 </Text>
-                <Text style={tw`text-xl font-semibold text-center text-black my-4 `}>
+                <Text
+                  style={tw`text-xl font-semibold text-center text-black my-4 `}>
                   Welcome back we missed you!
                 </Text>
               </View>
@@ -110,10 +138,8 @@ const Login = () => {
                 />
                 <Text
                   onPress={() => navigation.navigate('Register')}
-                  style={tw`text-center text-blue-700 mt-8`}
-                >
-                  Not registered?{' '}
-                  <Text style={tw`font-semibold`}>Sign Up</Text>
+                  style={tw`text-center text-blue-700 mt-8`}>
+                  Not registered? <Text style={tw`font-semibold`}>Sign Up</Text>
                 </Text>
               </View>
             </View>

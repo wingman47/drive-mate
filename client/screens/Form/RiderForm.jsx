@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import {Icon} from '@rneui/themed';
@@ -27,7 +34,7 @@ const RiderForm = () => {
   const [time, setTime] = useState('');
   const [formattedDateAndTime, setFormattedDateAndTime] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const destination = useSelector(selectDestination);
   const dispatch = useDispatch();
@@ -35,7 +42,7 @@ const RiderForm = () => {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-  
+
       console.log('formattedDateAndTime ', formattedDateAndTime);
       console.log(destination.location.lat, destination.location.lng);
       if (!selectedCategory || !formattedDateAndTime) {
@@ -43,7 +50,14 @@ const RiderForm = () => {
         setLoading(false);
         return;
       }
-  
+      console.log('data sent ', {
+        destination: {
+          type: 'Point',
+          coordinates: [destination.location.lat, destination.location.lng],
+        },
+        category: selectedCategory,
+        preferredDateTime: formattedDateAndTime,
+      });
       const response = await axios.post(`${ipconfig}/api/rider/finddrivers`, {
         destination: {
           type: 'Point',
@@ -52,7 +66,7 @@ const RiderForm = () => {
         category: selectedCategory,
         preferredDateTime: formattedDateAndTime,
       });
-      const { data } = response;
+      const {data} = response;
       console.log('response received ', data.data.matchesDestination);
       if (data.status === 'success') {
         dispatch(setSameDestination(data.data.matchesDestination));
@@ -62,7 +76,7 @@ const RiderForm = () => {
         console.log('No matching drivers found.');
         navigation.navigate('NoDriverScreen');
       }
-  
+
       setLoading(false); // Stop loading
       // ! TODO: radius
     } catch (error) {
@@ -128,70 +142,73 @@ const RiderForm = () => {
     <KeyboardAwareScrollView>
       <View style={tw`flex-1`}>
         {loading ? (
-          <View style={{ flex: 1, justifyContent: 'center' }}>
+          <View style={{flex: 1, justifyContent: 'center'}}>
             <ActivityIndicator size="large" color="#00008b" />
           </View>
-        ) :
-      <View style={[styles.container, tw`m-4 my-32 rounded-lg bg-white`]}>
-        <Text style={tw`text-green-600 font-bold text-center my-4 text-4xl`}>
-          Find a Ride
-        </Text>
-        <Text style={styles.label}>Date</Text>
-        <TouchableOpacity
-          style={styles.inputContainer}
-          onPress={showDatePicker}>
-          <Icon
-            style={tw`p-2 bg-green-600 rounded-full w-10`}
-            name="calendar"
-            color="white"
-            type="antdesign"
-          />
-          <Text style={styles.inputText}>{date || 'Select Date'}</Text>
-        </TouchableOpacity>
-        <DateTimePickerModal
-          isVisible={isDatePickerVisible}
-          mode="date"
-          onConfirm={handleDateConfirm}
-          onCancel={hideDatePicker}
-        />
+        ) : (
+          <View style={[styles.container, tw`m-4 my-32 rounded-lg bg-white`]}>
+            <Text
+              style={tw`text-green-600 font-bold text-center my-4 text-4xl`}>
+              Find a Ride
+            </Text>
+            <Text style={styles.label}>Date</Text>
+            <TouchableOpacity
+              style={styles.inputContainer}
+              onPress={showDatePicker}>
+              <Icon
+                style={tw`p-2 bg-green-600 rounded-full w-10`}
+                name="calendar"
+                color="white"
+                type="antdesign"
+              />
+              <Text style={styles.inputText}>{date || 'Select Date'}</Text>
+            </TouchableOpacity>
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              mode="date"
+              onConfirm={handleDateConfirm}
+              onCancel={hideDatePicker}
+            />
 
-        <Text style={styles.label}>Time</Text>
-        <TouchableOpacity
-          style={styles.inputContainer}
-          onPress={showTimePicker}>
-          <Time
-            style={tw`p-2 bg-green-600 rounded-full`}
-            name="clockcircleo"
-            color="white"
-            size={24}
-            type="antdesign"
-          />
-          <Text style={styles.inputText}>{time || 'Select Time'}</Text>
-        </TouchableOpacity>
-        <DateTimePickerModal
-          isVisible={isTimePickerVisible}
-          mode="time"
-          onConfirm={handleTimeConfirm}
-          onCancel={hideTimePicker}
-        />
-        <Text style={styles.label}>Category</Text>
-        <RNPickerSelect
-          items={categories}
-          onValueChange={handleCategoryChange}
-          value={selectedCategory}
-          placeholder={{label: 'Select a category', value: null}}
-        />
+            <Text style={styles.label}>Time</Text>
+            <TouchableOpacity
+              style={styles.inputContainer}
+              onPress={showTimePicker}>
+              <Time
+                style={tw`p-2 bg-green-600 rounded-full`}
+                name="clockcircleo"
+                color="white"
+                size={24}
+                type="antdesign"
+              />
+              <Text style={styles.inputText}>{time || 'Select Time'}</Text>
+            </TouchableOpacity>
+            <DateTimePickerModal
+              isVisible={isTimePickerVisible}
+              mode="time"
+              onConfirm={handleTimeConfirm}
+              onCancel={hideTimePicker}
+            />
+            <Text style={styles.label}>Category</Text>
+            <RNPickerSelect
+              items={categories}
+              onValueChange={handleCategoryChange}
+              value={selectedCategory}
+              placeholder={{label: 'Select a category', value: null}}
+            />
 
-        <TouchableOpacity
-          style={[styles.button, tw`bg-green-600 font-bold py-4`]}
-          onPress={async () => {
-            await handleTimeAndDateConfirm(time, date);
-            handleSubmit();
-          }}>
-          <Text style={[styles.buttonText, tw`font-bold text-xl`]}>Submit</Text>
-        </TouchableOpacity>
-      </View>
-      }
+            <TouchableOpacity
+              style={[styles.button, tw`bg-green-600 font-bold py-4`]}
+              onPress={async () => {
+                await handleTimeAndDateConfirm(time, date);
+                handleSubmit();
+              }}>
+              <Text style={[styles.buttonText, tw`font-bold text-xl`]}>
+                Submit
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </KeyboardAwareScrollView>
   );
@@ -208,7 +225,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginTop: 10,
     fontWeight: '600',
-    color: 'black'
+    color: 'black',
   },
   inputContainer: {
     flexDirection: 'row',

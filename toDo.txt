@@ -2,9 +2,9 @@
 
 1. Reject request controller and connect it. 
 
-2. Make logout
+2. Make logout - completed
 
-3. After the login user should not come back to login in the same session
+3. After the login user should not come back to login in the same session - completed
 
 4. After accpeting the request from the user schedule is begin saved as panding (completed)
 
@@ -15,7 +15,7 @@ Have to apply loading in 2 calls
 1-> sending request to driver
 2-> accpepting request of rider
 
-7. Improve login/sigup ui/ error hendling (completed but should be Improved more) (ui is improvement done / error messages are not ralavent)
+7. Improve login/sigup ui/ error handling (completed but should be Improved more) (ui is improvement done / error messages are not ralavent)
 
 8. Outgoing / Incoming request screens in request (toggle) #controller are written.
 
@@ -25,7 +25,9 @@ Have to apply loading in 2 calls
 
 11. In Joining driver and rider (take a time interval insted of a Instantanious time) & (If both catagory and date time are matching we are getting a repeated data in the Driver Options).
 
----COMPLEX TOTOS--
+12. Add array of user in schedules to fetch all rider details
+
+--- COMPLEX TOTOS --
 
 1. Nofification
 

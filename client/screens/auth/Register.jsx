@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Image,
   Text,
   useColorScheme,
   View,
@@ -10,7 +9,6 @@ import {
   Platform,
 } from 'react-native';
 import tw from 'twrnc';
-import { Colors, Header } from 'react-native/Libraries/NewAppScreen';
 import InputBox from '../../components/Form/InputBox';
 import SubmitButton from '../../components/Form/SubmitButton';
 import axios from 'axios';
@@ -18,6 +16,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useDispatch } from 'react-redux';
 import { setLogin } from '../../slice/authSlice';
 import ipconfig from '../../ipconfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Register = ({ navigation }) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -48,6 +47,7 @@ const Register = ({ navigation }) => {
           user: response.data.user,
         }),
       );
+      AsyncStorage.setItem('userInfo', JSON.stringify(response.data.user));
     } catch (error) {
       Alert.alert(error.message);
       console.log(error);

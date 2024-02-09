@@ -25,7 +25,6 @@ export const navSlice = createSlice({
   },
 })
 
-// Action creators are generated for each case reducer function
 export const { setOrigin, setDestination, setTravelTimeInformation } = navSlice.actions
 
 // Selectors :: to get data from the data layer.
