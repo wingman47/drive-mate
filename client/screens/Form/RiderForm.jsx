@@ -26,6 +26,7 @@ import {
 import {selectDestination} from '../../slice/navSlice';
 import axios from 'axios';
 import ipconfig from '../../ipconfig';
+import {getToken} from '../../slice/authSlice';
 
 const RiderForm = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -38,6 +39,7 @@ const RiderForm = () => {
   const navigation = useNavigation();
   const destination = useSelector(selectDestination);
   const dispatch = useDispatch();
+  const token = useSelector(getToken);
 
   const handleSubmit = async () => {
     try {
@@ -58,14 +60,24 @@ const RiderForm = () => {
         category: selectedCategory,
         preferredDateTime: formattedDateAndTime,
       });
-      const response = await axios.post(`${ipconfig}/api/rider/finddrivers`, {
-        destination: {
-          type: 'Point',
-          coordinates: [destination.location.lat, destination.location.lng],
+      console.log('token', token);
+      const response = await axios.post(
+        `${ipconfig}/api/rider/finddrivers`,
+        {
+          destination: {
+            type: 'Point',
+            coordinates: [destination.location.lat, destination.location.lng],
+          },
+          category: selectedCategory,
+          preferredDateTime: formattedDateAndTime,
         },
-        category: selectedCategory,
-        preferredDateTime: formattedDateAndTime,
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
       const {data} = response;
       console.log('response received ', data.data.matchesDestination);
       if (data.status === 'success') {

@@ -77,6 +77,7 @@ const Navigation = () => {
         dispatch(
           setLogin({
             user: userInfo,
+            token: response.data.token,
           }),
         );
         console.log('###################################', userInfo);

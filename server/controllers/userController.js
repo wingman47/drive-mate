@@ -13,7 +13,6 @@ const requireSignIn = jwt({
 const registerController = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    
     // Validation
     if (!name) {
       return res.status(400).send({
@@ -33,16 +32,17 @@ const registerController = async (req, res) => {
         message: "Password is required and must be at least 6 characters long",
       });
     }
-    
+
     // Check if user already exists
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
+      console.log("user already exists");
       return res.status(409).send({
         success: false,
         message: "User already registered with this email",
       });
     }
-    
+
     // Hash the password
     const hashedPassword = await hashPassword(password);
 
@@ -54,11 +54,14 @@ const registerController = async (req, res) => {
     }).save();
 
     console.log("Created user:", user);
-    
+    const token = JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
     return res.status(201).send({
       success: true,
       message: "Registration successful. Please login.",
-      user: user,
+      user,
+      token,
     });
   } catch (error) {
     console.error("Error in register API:", error);
@@ -69,11 +72,10 @@ const registerController = async (req, res) => {
   }
 };
 
-
 const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     // Validation
     if (!email || !password) {
       return res.status(400).send({
@@ -101,7 +103,7 @@ const loginController = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
+    const token = JWT.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
     // Remove password from user object before sending the response
@@ -238,7 +240,6 @@ const getIncomingRequests = async (req, res) => {
     });
   }
 };
-
 
 // get outgoing requests
 const getOutgoingRequests = async (req, res) => {

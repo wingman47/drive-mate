@@ -1,23 +1,32 @@
 import Schedule from '../../components/Scheduled/Schedule';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { View, ScrollView, ActivityIndicator } from 'react-native';
-import { useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
-import { selectUser } from '../../slice/authSlice';
+import React, {useState} from 'react';
+import {View, ScrollView, ActivityIndicator} from 'react-native';
+import {useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
+import {getToken, selectUser} from '../../slice/authSlice';
 import ipconfig from '../../ipconfig';
-import tw from 'twrnc'
+import tw from 'twrnc';
 
 const ScheduledScreen = () => {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = useSelector(selectUser);
-
+  const token = useSelector(getToken);
   const fetchSchedules = async () => {
     try {
-      const { data } = await axios.post(`${ipconfig}/api/v1/auth/schedules`, {
-        userId: user._id,
-      });
+      const {data} = await axios.post(
+        `${ipconfig}/api/v1/auth/schedules`,
+        {
+          userId: user._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
       console.log('scheduled data', data.data);
       if (data) {
         setSchedules(data.data);
@@ -33,28 +42,28 @@ const ScheduledScreen = () => {
     React.useCallback(() => {
       // Run the fetchSchedules function every time the screen comes into focus
       fetchSchedules();
-    }, [])
+    }, []),
   );
 
   return (
     <View style={tw`flex-1`}>
       <View>
-        { loading ?  <View style={{flex: 1,
-        justifyContent: 'center'}}>
-      <ActivityIndicator size="large" color="#00008b" />
-     </View> :
+        {loading ? (
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <ActivityIndicator size="large" color="#00008b" />
+          </View>
+        ) : (
           <ScrollView>
-            {
-              schedules.map(schedule => (
-                <Schedule
-                  key={schedule._id}
-                  destination={schedule.destination}
-                  status={schedule.status}
-                  preferredDateTime={schedule.preferredDateTime}
-                />
-              ))
-            }
-            </ScrollView>}
+            {schedules.map(schedule => (
+              <Schedule
+                key={schedule._id}
+                destination={schedule.destination}
+                status={schedule.status}
+                preferredDateTime={schedule.preferredDateTime}
+              />
+            ))}
+          </ScrollView>
+        )}
       </View>
     </View>
   );

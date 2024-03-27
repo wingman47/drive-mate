@@ -48,9 +48,11 @@ const Login = () => {
       dispatch(
         setLogin({
           user: response.data.user,
+          token: response.data.token,
         }),
       );
       AsyncStorage.setItem('userInfo', JSON.stringify(response.data.user));
+      AsyncStorage.setItem('token', JSON.stringify(response.data.token));
       setLoading(false);
       console.log('user logged ', user);
     } catch (error) {
@@ -71,15 +73,18 @@ const Login = () => {
     try {
       setLoading(true);
       const getInfo = await AsyncStorage.getItem('userInfo');
+      const token = await AsyncStorage.getItem('token');
       const userInfo = JSON.parse(getInfo);
 
       if (userInfo) {
         dispatch(
           setLogin({
             user: userInfo,
+            token: token,
           }),
         );
         console.log('###################################', userInfo);
+        console.log(token);
       }
 
       setLoading(false);

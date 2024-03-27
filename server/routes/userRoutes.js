@@ -8,6 +8,7 @@ const {
   getIncomingRequests,
   getOutgoingRequests,
 } = require("../controllers/userController");
+const verifyToken = require("../middleware/auth");
 
 //router object
 const router = express.Router();
@@ -20,16 +21,16 @@ router.post("/register", registerController);
 router.post("/login", loginController);
 
 //UPDATE || PUT
-router.put("/update-user", requireSignIn, updateUserController);
+router.put("/update-user", verifyToken, requireSignIn, updateUserController);
 
 // Fetch schedules Route || GET
-router.post("/schedules", getSchedules);
+router.post("/schedules", verifyToken, getSchedules);
 
-// Get inoming requests Route || GET
-router.post("/incoming-req", getIncomingRequests);
+// Get incoming requests Route || GET
+router.post("/incoming-req", verifyToken, getIncomingRequests);
 
-// Get inoming requests Route || GET
-router.post("/outgoing-req", getOutgoingRequests);
+// Get incoming requests Route || GET
+router.post("/outgoing-req", verifyToken, getOutgoingRequests);
 
 //export
 module.exports = router;

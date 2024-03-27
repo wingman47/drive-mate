@@ -1,10 +1,12 @@
 import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {capitalizeFirstLetter} from '../Scheduled/Schedule';
 import {Icon} from 'react-native-elements';
 import axios from 'axios';
 import ipconfig from '../../ipconfig';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {getToken} from '../../slice/authSlice';
 
 const RequestCard = ({
   name,
@@ -15,17 +17,30 @@ const RequestCard = ({
   riderId,
 }) => {
   const navigation = useNavigation();
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const token = useSelector(getToken);
 
   const acceptRequest = async () => {
     try {
-      const data = await axios.patch(`${ipconfig}/api/driver/acceptrequest`, {
-        queueDriverId,
-        requestId,
-        riderId,
-      });
+      const data = await axios.patch(
+        `${ipconfig}/api/driver/acceptrequest`,
+        {
+          queueDriverId,
+          requestId,
+          riderId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
       console.log('Data Recieved', data.data);
-      navigation.navigate('ConfirmationScreen',{heading: 'Request Accepted', msg: 'Enjoy your journey with your drive mate'});
+      navigation.navigate('ConfirmationScreen', {
+        heading: 'Request Accepted',
+        msg: 'Enjoy your journey with your drive mate',
+      });
     } catch (error) {
       console.error(error);
       Alert.alert('Request again');

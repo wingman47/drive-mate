@@ -1,23 +1,33 @@
-import { View,ActivityIndicator } from 'react-native';
+import {View, ActivityIndicator} from 'react-native';
 import RequestCard from '../../components/Requests/RequestCard';
 import axios from 'axios';
 import tw from 'twrnc';
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
-import { selectUser } from '../../slice/authSlice';
+import React, {useState, useEffect} from 'react';
+import {useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native'; // Import useFocusEffect
+import {getToken, selectUser} from '../../slice/authSlice';
 import ipconfig from '../../ipconfig';
 
 export const RequestItem = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = useSelector(selectUser);
-
+  const token = useSelector(getToken);
+  
   const fetchRequests = async () => {
     try {
-      const { data } = await axios.post(`${ipconfig}/api/v1/auth/incoming-req`, {
-        userId: user._id,
-      });
+      const {data} = await axios.post(
+        `${ipconfig}/api/v1/auth/incoming-req`,
+        {
+          userId: user._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
       console.log('Requests data', data.data);
       if (data) {
         setRequests(data.data);
@@ -33,13 +43,15 @@ export const RequestItem = () => {
     React.useCallback(() => {
       // Run the fetchRequests function every time the screen comes into focus
       fetchRequests();
-    }, [])
+    }, []),
   );
 
   return (
     <View style={tw`flex-1`}>
-      { loading ?  <ActivityIndicator size="large" color="#00ff00" /> :
-        requests.map((request) => (
+      {loading ? (
+        <ActivityIndicator size="large" color="#00ff00" />
+      ) : (
+        requests.map(request => (
           <RequestCard
             key={request._id} // Ensure each item has a unique key
             name={request.riderName}
@@ -49,7 +61,8 @@ export const RequestItem = () => {
             requestId={request._id}
             riderId={request.requestedByRider}
           />
-        ))}
+        ))
+      )}
     </View>
   );
 };

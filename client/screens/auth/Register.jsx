@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -12,13 +12,13 @@ import tw from 'twrnc';
 import InputBox from '../../components/Form/InputBox';
 import SubmitButton from '../../components/Form/SubmitButton';
 import axios from 'axios';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useDispatch } from 'react-redux';
-import { setLogin } from '../../slice/authSlice';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useDispatch} from 'react-redux';
+import {setLogin} from '../../slice/authSlice';
 import ipconfig from '../../ipconfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Register = ({ navigation }) => {
+const Register = ({navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -32,7 +32,7 @@ const Register = ({ navigation }) => {
 
       if (!name || !email || !password) {
         Alert.alert('Please fill the fields');
-        setLoading(false)
+        setLoading(false);
         return;
       }
 
@@ -45,9 +45,11 @@ const Register = ({ navigation }) => {
       dispatch(
         setLogin({
           user: response.data.user,
+          token: response.data.token,
         }),
       );
       AsyncStorage.setItem('userInfo', JSON.stringify(response.data.user));
+      AsyncStorage.setItem('token', JSON.stringify(response.data.token));
     } catch (error) {
       Alert.alert(error.message);
       console.log(error);
@@ -60,8 +62,7 @@ const Register = ({ navigation }) => {
   return (
     <KeyboardAvoidingView
       style={tw`flex-1`}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={tw`flex-1`}>
         {loading ? (
           <View style={tw`flex-1 justify-center items-center`}>
@@ -75,8 +76,7 @@ const Register = ({ navigation }) => {
                   Create Account
                 </Text>
                 <Text
-                  style={tw`text-xl font-semibold text-center text-black my-4 `}
-                >
+                  style={tw`text-xl font-semibold text-center text-black my-4 `}>
                   Create your account to find your Drive mate
                 </Text>
               </View>
@@ -109,10 +109,8 @@ const Register = ({ navigation }) => {
                 />
                 <Text
                   onPress={() => navigation.navigate('Login')}
-                  style={tw`text-center text-blue-700 mt-4`}
-                >
-                  Already a user?{' '}
-                  <Text style={tw`font-semibold`}>Login</Text>
+                  style={tw`text-center text-blue-700 mt-4`}>
+                  Already a user? <Text style={tw`font-semibold`}>Login</Text>
                 </Text>
               </View>
             </View>
