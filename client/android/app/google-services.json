@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "781318215931",
+    "project_id": "drive-mate-18215",
+    "storage_bucket": "drive-mate-18215.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781318215931:android:e1c31a8095dd2102a4f85e",
+        "android_client_info": {
+          "package_name": "com.newapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2uu7U7SvoCnpkPPFD6Wjs5o_kwes49ro"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
