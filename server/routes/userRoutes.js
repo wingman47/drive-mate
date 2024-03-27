@@ -7,6 +7,8 @@ const {
   getSchedules,
   getIncomingRequests,
   getOutgoingRequests,
+  registerToken,
+  clearToken
 } = require("../controllers/userController");
 const verifyToken = require("../middleware/auth");
 
@@ -31,6 +33,11 @@ router.post("/incoming-req", verifyToken, getIncomingRequests);
 
 // Get incoming requests Route || GET
 router.post("/outgoing-req", verifyToken, getOutgoingRequests);
+
+// Register token
+router.post("/registertoken", verifyToken, registerToken);
+
+router.post("/cleartoken", verifyToken, clearToken);
 
 //export
 module.exports = router;

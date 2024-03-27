@@ -1,6 +1,5 @@
 import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
-import React, {useState} from 'react';
-import {capitalizeFirstLetter} from '../Scheduled/Schedule';
+import React from 'react';
 import {Icon} from 'react-native-elements';
 import axios from 'axios';
 import ipconfig from '../../ipconfig';
@@ -17,7 +16,6 @@ const RequestCard = ({
   riderId,
 }) => {
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
   const token = useSelector(getToken);
 
   const acceptRequest = async () => {
@@ -47,9 +45,9 @@ const RequestCard = ({
     }
   };
 
-  const seprated = preferredDateTime.split('T');
-  const date = seprated[0];
-  const time = seprated[1].slice(0, -8);
+  const separated = preferredDateTime.split('T');
+  const date = separated[0];
+  const time = separated[1].slice(0, -8);
   return (
     <View style={styles.item}>
       <View style={styles.infoColumn}>

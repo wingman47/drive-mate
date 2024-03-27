@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Image,
   Text,
   useColorScheme,
   View,
@@ -19,11 +18,9 @@ import {selectUser, setLogin} from '../../slice/authSlice';
 import {useNavigation} from '@react-navigation/native';
 import ipconfig from '../../ipconfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const sportCar = require('../../assets/sport-car.png');
+import {getDeviceToken} from '../../utility/notification';
 
 const Login = () => {
-  const isDarkMode = useColorScheme() === 'dark';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -44,17 +41,33 @@ const Login = () => {
         email,
         password,
       });
-
-      dispatch(
-        setLogin({
-          user: response.data.user,
+      if (response.status === 200) {
+        dispatch(
+          setLogin({
+            user: response.data.user,
+            token: response.data.token,
+          }),
+        );
+        await getDeviceToken({
+          userId: response.data.user._id,
           token: response.data.token,
-        }),
-      );
-      AsyncStorage.setItem('userInfo', JSON.stringify(response.data.user));
-      AsyncStorage.setItem('token', JSON.stringify(response.data.token));
-      setLoading(false);
-      console.log('user logged ', user);
+        });
+        // console.log('device token', deviceToken);
+        // await axios.post(
+        //   `${ipconfig}/api/v1/auth/registertoken`,
+        //   {userId: response.data.user._id, deviceToken},
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${response.data.token}`,
+        //       'Content-Type': 'application/json',
+        //     },
+        //   },
+        // );
+        AsyncStorage.setItem('userInfo', JSON.stringify(response.data.user));
+        AsyncStorage.setItem('token', JSON.stringify(response.data.token));
+        setLoading(false);
+        console.log('user logged ', user);
+      }
     } catch (error) {
       Alert.alert(error.message);
       setLoading(false);
@@ -76,15 +89,14 @@ const Login = () => {
       const token = await AsyncStorage.getItem('token');
       const userInfo = JSON.parse(getInfo);
 
-      if (userInfo) {
+      if (userInfo && token) {
         dispatch(
           setLogin({
             user: userInfo,
             token: token,
           }),
         );
-        console.log('###################################', userInfo);
-        console.log(token);
+        console.log('user already logged in');
       }
 
       setLoading(false);

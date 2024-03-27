@@ -60,7 +60,6 @@ const RiderForm = () => {
         category: selectedCategory,
         preferredDateTime: formattedDateAndTime,
       });
-      console.log('token', token);
       const response = await axios.post(
         `${ipconfig}/api/rider/finddrivers`,
         {

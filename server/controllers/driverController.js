@@ -3,6 +3,7 @@ const Driver = require("../models/driverModel");
 const Request = require("../models/requestModel");
 const scheduleModel = require("../models/scheduleModel");
 const userModel = require("../models/userModel");
+const sendNotification = require("../helpers/sendNotification");
 
 // route to create a new driver in the Driver(queue) and creates a new schedule for the driver's User model
 const createDriver = async (req, res) => {
@@ -240,6 +241,12 @@ const acceptRequestFromRider = async (req, res) => {
       await Driver.findByIdAndDelete(queueDriverId);
     }
 
+    const token = rider.token;
+    if (token) {
+      const title = `🚀 Your request is accepted.`;
+      const body = `Driver - ${driver.name}, accepted your request.`;
+      await sendNotification(token, title, body);
+    }
     res.status(201).json({ message: "Accepted successfully" });
   } catch (error) {
     console.error(error);

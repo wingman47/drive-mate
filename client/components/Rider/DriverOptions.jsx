@@ -44,7 +44,7 @@ const DriverOptions = () => {
   const sameCategory = useSelector(selectCategory);
 
   return (
-    <View style={tw`p-2 `}>
+    <View style={tw`p-2`}>
       <Text
         style={tw`text-center text-xl my-3 font-semibold text-black bg-blue-200 p-3 mx-10 rounded-lg`}>
         Choose Your Drive Mate
@@ -52,7 +52,10 @@ const DriverOptions = () => {
       <ScrollView contentContainerStyle={{paddingBottom: 100}}>
         {/* Render DriverCards for sameDestination */}
         {sameDestination && renderDriverCards(sameDestination)}
-
+        <Text
+          style={tw`text-center text-base my-3 font-normal text-black bg-red-300 p-3 mx-10 rounded-lg`}>
+          Drivers going to the same place
+        </Text>
         {/* Render DriverCards for sameCategory */}
         {sameCategory && renderDriverCards(sameCategory)}
       </ScrollView>

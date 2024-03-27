@@ -1,3 +1,4 @@
+const sendNotification = require("../helpers/sendNotification");
 const Driver = require("../models/driverModel");
 const RequestModel = require("../models/requestModel");
 const scheduleModel = require("../models/scheduleModel");
@@ -17,24 +18,27 @@ const findDriversInTimeRange = async (req, res) => {
           preferredDateTime: {
             $gte: pastDate,
             $lte: futureDate,
-          }
+          },
         },
         {
           "destination.coordinates": {
             $geoWithin: {
-              $centerSphere: [destination.coordinates, 10 / 6371] // 10 km radius
-            }
-          }
-        }
-      ]
+              $centerSphere: [destination.coordinates, 10 / 6371], // 10 km radius
+            },
+          },
+        },
+      ],
     });
     console.log(drivers);
     res.status(200).json({ success: true, data: drivers });
   } catch (error) {
     res.status(500).json({ success: false, msg: "Server Error" });
-    console.error("Error finding drivers within range and destination:", error.message);
+    console.error(
+      "Error finding drivers within range and destination:",
+      error.message
+    );
   }
-}
+};
 
 // Find in radius.
 const findInRadius = async (req, res) => {
@@ -49,27 +53,29 @@ const findInRadius = async (req, res) => {
           preferredDateTime: {
             $gte: pastDate,
             $lte: futureDate,
-          }
+          },
         },
         {
           "destination.coordinates": {
             $geoWithin: {
-              $centerSphere: [destination.coordinates, 10 / 6371] // 10 km radius
-            }
-          }
-        }
-      ]
+              $centerSphere: [destination.coordinates, 10 / 6371], // 10 km radius
+            },
+          },
+        },
+      ],
     });
     console.log(drivers);
     res.status(200).json({ success: true, data: drivers });
   } catch (error) {
     res.status(500).json({ success: false, msg: "Server Error" });
-    console.error("Error finding drivers within range and destination:", error.message);
+    console.error(
+      "Error finding drivers within range and destination:",
+      error.message
+    );
   }
-}
+};
 
-
-// find driver 
+// find driver
 
 const findDrivers = async (req, res) => {
   try {
@@ -165,6 +171,15 @@ const requestDriver = async (req, res) => {
     // push request as incoming for the driver
     driver.incomingRequests.push(outgoingRequest._id);
     await driver.save();
+
+    /* --------------------------- Request through FCM -------------------------- */
+    const token = driver.token;
+    if (token) {
+      const title = `🚀 Your request is sent.`;
+      const body = `You sent a ride request to ${driver.name}.`;
+      await sendNotification(token, title, body);
+    }
+    /* ------------------------------------ - ----------------------------------- */
 
     res.status(201).json({ message: "Request successful" });
   } catch (error) {

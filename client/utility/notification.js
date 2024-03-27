@@ -1,4 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
+import axios from 'axios';
+import ipconfig from '../ipconfig';
 
 export const notificationListener = () => {
   // For gackground state
@@ -22,12 +24,24 @@ export const notificationListener = () => {
     });
 };
 
-export const getToken = async () => {
+export const getDeviceToken = async ({userId, token}) => {
   await messaging().registerDeviceForRemoteMessages();
-  const token = await messaging().getToken();
+  const deviceToken = await messaging().getToken();
+
+  await axios.post(
+    `${ipconfig}/api/v1/auth/registertoken`,
+    {userId, deviceToken},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
 
   console.log('================TOKEN=================');
   console.log(token);
+  console.log(typeof token);
   console.log('======================================');
 };
 // save the token to the db

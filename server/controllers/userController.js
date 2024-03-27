@@ -26,7 +26,7 @@ const registerController = async (req, res) => {
         message: "Email is required",
       });
     }
-    if (!password || password.length < 6) {
+    if (!password) {
       return res.status(400).send({
         success: false,
         message: "Password is required and must be at least 6 characters long",
@@ -274,6 +274,65 @@ const getOutgoingRequests = async (req, res) => {
   }
 };
 
+const registerToken = async (req, res) => {
+  try {
+    const { userId, deviceToken } = req.body;
+    console.log("recieved: ", deviceToken);
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      console.error("User not found");
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+    user.token = deviceToken;
+    await user.save();
+
+    res.status(200).send({
+      success: true,
+      message: "Device token registered successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: "Error while registering device token",
+      error: error.message,
+    });
+  }
+};
+
+const clearToken = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      console.error("User not found");
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+    user.token = null;
+    await user.save();
+
+    res.status(200).send({
+      success: true,
+      message: "Device token cleared successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: "Error while clearing device token",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   requireSignIn,
   registerController,
@@ -282,4 +341,6 @@ module.exports = {
   getSchedules,
   getIncomingRequests,
   getOutgoingRequests,
+  registerToken,
+  clearToken,
 };

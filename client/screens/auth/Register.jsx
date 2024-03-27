@@ -17,9 +17,9 @@ import {useDispatch} from 'react-redux';
 import {setLogin} from '../../slice/authSlice';
 import ipconfig from '../../ipconfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getDeviceToken} from '../../utility/notification';
 
 const Register = ({navigation}) => {
-  const isDarkMode = useColorScheme() === 'dark';
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -41,15 +41,20 @@ const Register = ({navigation}) => {
         email,
         password,
       });
-
-      dispatch(
-        setLogin({
-          user: response.data.user,
+      if (response.status === 201) {
+        dispatch(
+          setLogin({
+            user: response.data.user,
+            token: response.data.token,
+          }),
+        );
+        await getDeviceToken({
+          userId: response.data.user._id,
           token: response.data.token,
-        }),
-      );
-      AsyncStorage.setItem('userInfo', JSON.stringify(response.data.user));
-      AsyncStorage.setItem('token', JSON.stringify(response.data.token));
+        });
+        AsyncStorage.setItem('userInfo', JSON.stringify(response.data.user));
+        AsyncStorage.setItem('token', JSON.stringify(response.data.token));
+      }
     } catch (error) {
       Alert.alert(error.message);
       console.log(error);

@@ -7,8 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectUser, setLogout } from '../../slice/authSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectUser, setLogout} from '../../slice/authSlice';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SubmitButton from '../../components/Form/SubmitButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -23,8 +23,21 @@ import {
   setSameDestination,
 } from '../../slice/availableDriversSlice';
 import tw from 'twrnc';
+import axios from 'axios';
 const avatar = require('../../assets/avatar.png');
 
+const clearToken = async () => {
+  await axios.post(
+    `${ipconfig}/api/v1/auth/cleartoken`,
+    {userId: response.data.user._id},
+    {
+      headers: {
+        Authorization: `Bearer ${response.data.token}`,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+};
 const ProfileScreen = () => {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
@@ -36,7 +49,7 @@ const ProfileScreen = () => {
         <Text style={styles.username}>{user.name}</Text>
       </View>
 
-      <View style={[styles.infoContainer,tw`mx-4`]}>
+      <View style={[styles.infoContainer, tw`mx-4`]}>
         <TouchableOpacity style={styles.infoItem}>
           <Icon name="email" size={24} color="#2196f3" />
           <Text style={styles.infoText}>{user.email}</Text>
@@ -62,6 +75,7 @@ const ProfileScreen = () => {
               dispatch(setSameDestination(null));
               dispatch(setSameCategory(null));
               dispatch(setRadius(null));
+              clearToken();
               AsyncStorage.removeItem('userInfo');
             }}
             loading={false}

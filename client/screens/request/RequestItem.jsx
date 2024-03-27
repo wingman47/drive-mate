@@ -2,9 +2,9 @@ import {View, ActivityIndicator} from 'react-native';
 import RequestCard from '../../components/Requests/RequestCard';
 import axios from 'axios';
 import tw from 'twrnc';
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {useSelector} from 'react-redux';
-import {useFocusEffect} from '@react-navigation/native'; // Import useFocusEffect
+import {useFocusEffect} from '@react-navigation/native';
 import {getToken, selectUser} from '../../slice/authSlice';
 import ipconfig from '../../ipconfig';
 
@@ -41,7 +41,6 @@ export const RequestItem = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // Run the fetchRequests function every time the screen comes into focus
       fetchRequests();
     }, []),
   );
@@ -53,7 +52,7 @@ export const RequestItem = () => {
       ) : (
         requests.map(request => (
           <RequestCard
-            key={request._id} // Ensure each item has a unique key
+            key={request._id}
             name={request.riderName}
             category={request.category}
             preferredDateTime={request.preferredDateTime}
