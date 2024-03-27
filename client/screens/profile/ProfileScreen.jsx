@@ -7,8 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {selectUser, setLogout} from '../../slice/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser, setLogout } from '../../slice/authSlice';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SubmitButton from '../../components/Form/SubmitButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,6 +22,7 @@ import {
   setSameCategory,
   setSameDestination,
 } from '../../slice/availableDriversSlice';
+import tw from 'twrnc';
 const avatar = require('../../assets/avatar.png');
 
 const ProfileScreen = () => {
@@ -35,7 +36,7 @@ const ProfileScreen = () => {
         <Text style={styles.username}>{user.name}</Text>
       </View>
 
-      <View style={styles.infoContainer}>
+      <View style={[styles.infoContainer,tw`mx-4`]}>
         <TouchableOpacity style={styles.infoItem}>
           <Icon name="email" size={24} color="#2196f3" />
           <Text style={styles.infoText}>{user.email}</Text>
@@ -50,22 +51,23 @@ const ProfileScreen = () => {
           <Icon name="map-marker" size={24} color="#ffc107" />
           <Text style={styles.infoText}>City, India</Text>
         </TouchableOpacity>
-        <SubmitButton
-          // style={tw`bg-green-600`}
-          btnTitle={'Logout'}
-          handleSubmit={() => {
-            dispatch(setLogout());
-            dispatch(setOrigin(null));
-            dispatch(setDestination(null));
-            dispatch(setTravelTimeInformation(null));
-            dispatch(setSameDestination(null));
-            dispatch(setSameCategory(null));
-            dispatch(setRadius(null));
-            AsyncStorage.removeItem('userInfo');
-          }}
-          loading={false}
-          color={'blue-600'}
-        />
+        <View style={tw`mt-4`}>
+          <SubmitButton
+            btnTitle={'Logout'}
+            handleSubmit={() => {
+              dispatch(setLogout());
+              dispatch(setOrigin(null));
+              dispatch(setDestination(null));
+              dispatch(setTravelTimeInformation(null));
+              dispatch(setSameDestination(null));
+              dispatch(setSameCategory(null));
+              dispatch(setRadius(null));
+              AsyncStorage.removeItem('userInfo');
+            }}
+            loading={false}
+            color={'red-600'}
+          />
+        </View>
       </View>
     </ScrollView>
   );
@@ -96,11 +98,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   infoContainer: {
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    // borderRadius: 30,
-    height: 400,
-    // marginVertical: 20,
+    borderRadius: 20,
     padding: 44,
     backgroundColor: '#F5F7F8',
   },
