@@ -24,6 +24,7 @@ import {
 } from '../../slice/availableDriversSlice';
 import tw from 'twrnc';
 import axios from 'axios';
+import ipconfig from '../../ipconfig';
 const avatar = require('../../assets/avatar.png');
 
 const clearToken = async () => {
