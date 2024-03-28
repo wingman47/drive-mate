@@ -175,8 +175,8 @@ const requestDriver = async (req, res) => {
     /* --------------------------- Request through FCM -------------------------- */
     const token = driver.token;
     if (token) {
-      const title = `🚀 Your request is sent.`;
-      const body = `You sent a ride request to ${driver.name}.`;
+      const title = `🚀 You recieved a request.`;
+      const body = `${rider.name} requested to join your journey.`;
       await sendNotification(token, title, body);
     }
     /* ------------------------------------ - ----------------------------------- */
