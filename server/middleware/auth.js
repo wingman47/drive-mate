@@ -7,14 +7,13 @@ const verifyToken = async (req, res, next) => {
       return res.status(403).send("Access Denied");
     }
     if (token.startsWith("Bearer ")) {
-      token = token.slice(7, token.length).trimLeft();
+      token = token.slice(7, token.length).trimLeft().replace(/["']/g, "");
     }
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified;
-    console.log("verified");
     next();
   } catch (error) {
-    console.log(error);
+    console.log("auth error", error);
     res.status(400).json({ error: error.message });
   }
 };

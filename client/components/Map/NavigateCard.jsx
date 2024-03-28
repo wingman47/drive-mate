@@ -15,7 +15,7 @@ import {useDispatch} from 'react-redux';
 import NavFavourites from './NavFavourites';
 import {Icon} from 'react-native-elements';
 
-const NaviagateCard = () => {
+const NavigateCard = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   return (
@@ -48,19 +48,20 @@ const NaviagateCard = () => {
           returnKeyType={'search'}
           onFail={error => console.error(error)}
         />
-        <NavFavourites />
+        {/* <NavFavourites /> */}
       </View>
       <View
         style={tw`flex-row bg-white justify-evenly py-2 mt-auto border-t border-gray-100`}>
         <TouchableOpacity
           style={tw`flex-row justify-between bg-blue-600 w-24 px-4 py-3 rounded-full`}
-          >
+          handleSubmit={() => navigation.navigate('RiderForm')}>
           <Icon name="car" type="font-awesome" color="white" size={16} />
           <Text style={tw`text-white px-2 text-center`}>Ride</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={tw`flex-row justify-between bg-gray-100 w-24 px-4 py-3 rounded-full`}>
+          style={tw`flex-row justify-between bg-gray-100 w-24 px-4 py-3 rounded-full`}
+          handleSubmit={() => navigation.navigate('DriverForm')}>
           <Icon name="car" type="ionicon" color="black" size={16} />
           <Text style={tw`text-center`}>Drive</Text>
         </TouchableOpacity>
@@ -69,7 +70,7 @@ const NaviagateCard = () => {
   );
 };
 
-export default NaviagateCard;
+export default NavigateCard;
 
 const toInputBoxStyles = StyleSheet.create({
   container: {

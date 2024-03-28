@@ -9,15 +9,21 @@ import {
 } from 'react-native';
 import tw from 'twrnc';
 import NavOptions from '../../components/Map/NavOptions';
-import GOOGLE_MAPS_APIkEY from '../../config/index';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import {useDispatch} from 'react-redux';
 import {setDestination, setOrigin} from '../../slice/navSlice';
-import NavFavourites from '../../components/Map/NavFavourites';
+import {useFocusEffect} from '@react-navigation/native';
 const logo = require('../../assets/minimal.png');
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('cleared');
+      dispatch(setDestination(null));
+      dispatch(setOrigin(null));
+    }, []),
+  );
 
   return (
     <SafeAreaView style={tw`h-full text-black`}>
@@ -32,7 +38,7 @@ const HomeScreen = () => {
             source={logo}
           />
           <Text style={tw`text-black text-xl font-bold m-2`}>Drive Mate</Text>
-          <GooglePlacesAutocomplete
+          {/* <GooglePlacesAutocomplete
             placeholder="Where From?"
             nearbyPlacesAPI="GooglePlacesSearch"
             minLength={2}
@@ -55,9 +61,9 @@ const HomeScreen = () => {
               language: 'en',
             }}
             onFail={error => console.error(error)}
-          />
+          /> */}
           <NavOptions />
-          <NavFavourites />
+          {/* <NavFavourites /> */}
         </View>
       </ScrollView>
     </SafeAreaView>

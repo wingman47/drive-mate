@@ -41,6 +41,7 @@ const DriverForm = () => {
 
   const handleSubmit = async () => {
     try {
+      console.log('token', token);
       setLoading(true);
 
       if (!numberOfSeats || !selectedCategory || !formattedDateAndTime) {

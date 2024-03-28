@@ -47,39 +47,39 @@ const RideOptionsCard = () => {
   return (
     <SafeAreaView style={tw`bg-white flex-grow`}>
       <View style={tw`m-6 p-6`}>
-      <View style={tw`flex flex-row justify-between items-center`}>
-        <Image
-              style={{
-                width: 80,
-                height: 100,
-                resizeMode: 'contain',
-              }}
-              source={map}
-            />
-        <Text style={tw`font-bold text-xl text-black`}>Choose your Option</Text>
-      </View>
-        <View style={tw`flex my-8`}>
-          <SubmitButton
-            // style={tw`bg-green-600`}
-            btnTitle={'Ride'}
-            handleSubmit={() => navigation.navigate('RiderForm')}
-            loading={false}
-            color={'green-600'}
-          />
-          <SubmitButton
-            btnTitle={'Drive'}
-            // style={tw`bg-blue-600`}
-            handleSubmit={() => navigation.navigate('DriverForm')}
-            loading={false}
-            color={'blue-700'}
-          />
+        <View style={tw`flex flex-row justify-between items-center`}>
+          {/* <Image
+            style={{
+              width: 80,
+              height: 100,
+              resizeMode: 'contain',
+            }}
+            source={map}
+          /> */}
+          <Text style={tw`font-bold mx-auto text-xl text-black`}>
+            Select your Option
+          </Text>
+        </View>
+        <View
+          style={tw`flex-row bg-white justify-evenly py-2 mt-5`}>
+          <TouchableOpacity
+            style={tw`flex-row justify-between bg-blue-600 w-24 px-4 py-3 rounded-full`}
+            onPress={() => navigation.navigate('RiderForm')}>
+            <Icon name="car" type="font-awesome" color="white" size={16} />
+            <Text style={tw`text-white px-2 text-center`}>Ride</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={tw`flex-row justify-between bg-gray-100 w-24 px-4 py-3 rounded-full`}
+            onPress={() => navigation.navigate('DriverForm')}>
+            <Icon name="car" type="ionicon" color="black" size={16} />
+            <Text style={tw`text-center`}>Drive</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
   );
 };
 
-
 export default RideOptionsCard;
 
-const styles = StyleSheet.create({});
